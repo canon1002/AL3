@@ -6,7 +6,6 @@
 class Player {
 
 public: // メソッド
-
 	Player();
 	~Player();
 
@@ -15,7 +14,6 @@ public: // メソッド
 	void Draw(ViewProjection viewProjection);
 
 private: // フィールド
-
 	// ワールド変換データ
 	WorldTransform m_worldTransform;
 	// モデル
@@ -25,5 +23,7 @@ private: // フィールド
 
 	// キーボード入力
 	Input* m_input = nullptr;
+	// ImGuiで値を入力する変数
+	float m_inputPos3[3] = {0, 0, 0};
 
 };

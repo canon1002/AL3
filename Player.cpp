@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include <assert.h>
-#include"./class/Matrix4.h"
+#include "./class/Matrix4.h"
+#include "ImGuiManager.h"
 
 // コンストラクタ
 Player::Player() {}
@@ -29,6 +30,8 @@ void Player::Initialize(Model* model,uint32_t textureHandle) {
 // 更新
 void Player::Update() {
 
+	// キーボードによる移動処理
+
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 	// キャラクターの移動速さ
@@ -47,6 +50,18 @@ void Player::Update() {
 		move.y -= kCharacterSpeed;
 	}
 
+	// 移動限界座標
+	const float kMoveLimitX = 30;
+	const float kMoveLimitY = 10;
+	// 範囲を超えない処理
+	m_worldTransform.translation_.x = max(m_worldTransform.translation_.x, -kMoveLimitX);
+	m_worldTransform.translation_.x = min(m_worldTransform.translation_.x, +kMoveLimitX);
+	m_worldTransform.translation_.y = max(m_worldTransform.translation_.y, -kMoveLimitY);
+	m_worldTransform.translation_.y = min(m_worldTransform.translation_.y, +kMoveLimitY);
+
+
+	// 行列への変換
+
 	// 座標移動 (ベクトルの加算)
 	m_worldTransform.translation_.x += move.x;
 	m_worldTransform.translation_.y += move.y;
@@ -58,6 +73,18 @@ void Player::Update() {
 
 	//行列を定数バッファに転送
 	m_worldTransform.TransferMatrix();
+
+
+	// 座標を表示(デバッグ)
+
+	// キャラクターの座標を画面表示する処理
+	ImGui::Begin("Player");
+	// 座標を代入
+	m_inputPos3[0] = m_worldTransform.translation_.x;
+	m_inputPos3[1] = m_worldTransform.translation_.y;
+	m_inputPos3[2] = m_worldTransform.translation_.z;
+	ImGui::SliderFloat3("Position", m_inputPos3, 0.0f, 1.0f);
+	ImGui::End();
 
 }
 

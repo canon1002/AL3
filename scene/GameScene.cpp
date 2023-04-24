@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "TextureManager.h"
+#include "AxisIndicator.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -10,6 +11,8 @@ GameScene::~GameScene() {
 	delete m_model;
 	// 自キャラの開放
 	delete m_player;
+	// デバッグカメラの開放
+	delete m_debugCamera;
 }
 
 void GameScene::Initialize() {
@@ -28,6 +31,12 @@ void GameScene::Initialize() {
 	m_player = new Player();
 	// 自キャラの初期化
 	m_player->Initialize(m_model, m_textureHandle);
+	// デバッグカメラの生成
+	m_debugCamera = new DebugCamera(1280, 720);
+	// 軸方向表示の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// 軸方向表示が参照するビュープロジェクションを指定する
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&m_viewProjection);
 
 }
 
@@ -35,7 +44,26 @@ void GameScene::Update() {
 
 	// 自キャラの更新
 	m_player->Update();
+	
+	// デバッグカメラの有効化
+	#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE)) {
+		m_isDebugCameraAction = true;
+	}
+#endif
 
+	// カメラの処理
+	if (m_isDebugCameraAction) {
+		// デバッグカメラの更新
+		m_debugCamera->Update();
+		m_viewProjection.matView = m_debugCamera->GetViewProjection().matView;
+		m_viewProjection.matProjection = m_debugCamera->GetViewProjection().matProjection;
+		// ビュープロジェクションの転送
+		m_viewProjection.TransferMatrix();
+	} else {
+		// ビュープロジェクション行列の更新と転送
+		m_viewProjection.UpdateMatrix();
+	}
 }
 
 void GameScene::Draw() {
