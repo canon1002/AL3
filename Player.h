@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Input.h"
 
 class Player {
 
@@ -21,5 +22,8 @@ private: // フィールド
 	Model* m_model = nullptr;
 	// テクスチャハンドル
 	uint32_t m_textureHandle = 0u;
+
+	// キーボード入力
+	Input* m_input = nullptr;
 
 };
