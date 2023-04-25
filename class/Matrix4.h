@@ -65,17 +65,17 @@ public: // 4x4行列 メゾット
 	/// <summary>
 	// 回転行列の作成(X)
 	/// <summary>
-	static Matrix4x4 MekeRoatateXMatrix(float rad);
+	static Matrix4x4 MakeRoatateXMatrix(float rad);
 
 	/// <summary>
 	// 回転行列の作成(Y)
 	/// <summary>
-	static Matrix4x4 MekeRoatateYMatrix(float rad);
+	static Matrix4x4 MakeRoatateYMatrix(float rad);
 	
 	/// <summary>
 	// 回転行列の作成(Z)
 	/// <summary>
-	static Matrix4x4 MekeRoatateZMatrix(float rad);
+	static Matrix4x4 MakeRoatateZMatrix(float rad);
 
 	/// <summary>
 	// 座標変換

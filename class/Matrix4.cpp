@@ -158,7 +158,7 @@ Matrix4x4 Matrix4::MakeScaleMatrix(const Vector3 scale) {
 
 
 // 回転行列の作成(X軸周り：YZ平面)
-Matrix4x4 Matrix4::MekeRoatateXMatrix(float rad) {
+Matrix4x4 Matrix4::MakeRoatateXMatrix(float rad) {
 
 	return Matrix4x4{
 		1,0,0,0,
@@ -170,7 +170,7 @@ Matrix4x4 Matrix4::MekeRoatateXMatrix(float rad) {
 }
 
 // 回転行列の作成(Y軸周り：XZ平面)
-Matrix4x4 Matrix4::MekeRoatateYMatrix(float rad) {
+Matrix4x4 Matrix4::MakeRoatateYMatrix(float rad) {
 
 	return Matrix4x4{
 		std::cos(rad),0,-std::sin(rad),0,
@@ -182,7 +182,7 @@ Matrix4x4 Matrix4::MekeRoatateYMatrix(float rad) {
 }
 
 // 回転行列の作成(Z軸周り：XY平面)
-Matrix4x4 Matrix4::MekeRoatateZMatrix(float rad) {
+Matrix4x4 Matrix4::MakeRoatateZMatrix(float rad) {
 
 	return Matrix4x4{
 		std::cos(rad),std::sin(rad),0,0,
@@ -212,9 +212,9 @@ Vector3 Matrix4::Transform(const Vector3& v, const Matrix4x4& m) {
 Matrix4x4 Matrix4::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 
 	// 回転行列を作成
-	Matrix4x4 rotateXMatrix = Matrix4::MekeRoatateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = Matrix4::MekeRoatateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = Matrix4::MekeRoatateZMatrix(rotate.z);
+	Matrix4x4 rotateXMatrix = Matrix4::MakeRoatateXMatrix(rotate.x);
+	Matrix4x4 rotateYMatrix = Matrix4::MakeRoatateYMatrix(rotate.y);
+	Matrix4x4 rotateZMatrix = Matrix4::MakeRoatateZMatrix(rotate.z);
 	Matrix4x4 rotateXYZMatrix = Matrix4::Multiply(rotateXMatrix, Matrix4::Multiply(rotateYMatrix, rotateZMatrix));
 
 	return Matrix4x4{
