@@ -47,9 +47,12 @@ void GameScene::Update() {
 	
 	// デバッグカメラの有効化
 	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
+
+	// 数字の0キーを押すとデバックカメラを起動する
+	if (input_->TriggerKey(DIK_0)) {
 		m_isDebugCameraAction = true;
 	}
+
 #endif
 
 	// カメラの処理
