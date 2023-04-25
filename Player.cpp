@@ -37,6 +37,9 @@ void Player::Update() {
 	// キャラクターの移動速さ
 	const float kCharacterSpeed = 0.2f;
 
+	// 旋回処理
+	Rotate();
+
 	// 押した方向で移動ベクトルを変更(左右)
 	if (m_input->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
@@ -59,6 +62,14 @@ void Player::Update() {
 	m_worldTransform.translation_.y = max(m_worldTransform.translation_.y, -kMoveLimitY);
 	m_worldTransform.translation_.y = min(m_worldTransform.translation_.y, +kMoveLimitY);
 
+	// キャラクターの攻撃処理
+	Attack();
+
+	// 弾の更新
+	if (m_bullet) {
+		m_bullet->Update();
+	}
+
 
 	// 行列への変換
 
@@ -66,13 +77,9 @@ void Player::Update() {
 	m_worldTransform.translation_.x += move.x;
 	m_worldTransform.translation_.y += move.y;
 	m_worldTransform.translation_.z += move.z;
-
-	// スケーリング行列の作成
-	m_worldTransform.matWorld_ = Matrix4::MakeAffineMatrix(
-	    m_worldTransform.scale_, m_worldTransform.rotation_, m_worldTransform.translation_);
-
-	//行列を定数バッファに転送
-	m_worldTransform.TransferMatrix();
+	
+	// 行列を計算・転送
+	m_worldTransform.UpdateMatrix();
 
 
 	// 座標を表示(デバッグ)
@@ -91,7 +98,41 @@ void Player::Update() {
 // 描画
 void Player::Draw(ViewProjection viewProjection) {
 
+	// 弾の描画
+	if (m_bullet) {
+		m_bullet->Draw(viewProjection);
+	}
+
 	// 3Dモデルを描画
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
+
+}
+
+// 旋回(回転)
+void Player::Rotate() { 
+	//回転速度[ラジアン/flame]
+	const float kRotSpeed = 0.2f;
+
+	// 押した方向で移動ベクトルを変更
+	if (m_input->PushKey(DIK_A)) {
+		m_worldTransform.rotation_.y -= kRotSpeed;
+	} else if (m_input->PushKey(DIK_D)) {
+		m_worldTransform.rotation_.y += kRotSpeed;
+	}
+}
+
+// 攻撃
+void Player::Attack() {
+
+	// 発射キーをトリガーしたら
+	if (m_input->PushKey(DIK_SPACE)) {
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(m_model, m_worldTransform.translation_);
+
+		// 弾を登録
+		m_bullet = newBullet;
+	}
 
 }
