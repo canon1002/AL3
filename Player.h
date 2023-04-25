@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include <list>
 
 class Player {
 
@@ -34,6 +35,6 @@ private: // フィールド
 	float m_inputPos3[3] = {0, 0, 0};
 
 	// 弾
-	PlayerBullet* m_bullet = nullptr;
+	std::list<PlayerBullet*> m_bullets;
 
 };

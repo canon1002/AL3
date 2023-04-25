@@ -12,7 +12,7 @@ PlayerBullet::~PlayerBullet() {}
 void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 
 	// NULLポインタチェック
-	assert(m_model);
+	assert(model);
 
 	// 受け取ったデータをメンバ変数に格納
 	m_model = model;

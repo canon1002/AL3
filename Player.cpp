@@ -7,7 +7,14 @@
 Player::Player() {}
 
 // デストラクタ
-Player::~Player() {}
+Player::~Player() {
+
+	// 弾クラスの開放
+	for (PlayerBullet* bullet : m_bullets) {
+		delete bullet;
+	}
+
+}
 
 // 初期化
 void Player::Initialize(Model* model,uint32_t textureHandle) {
@@ -66,8 +73,8 @@ void Player::Update() {
 	Attack();
 
 	// 弾の更新
-	if (m_bullet) {
-		m_bullet->Update();
+	for (PlayerBullet * bullet : m_bullets){
+		bullet->Update();
 	}
 
 
@@ -99,8 +106,8 @@ void Player::Update() {
 void Player::Draw(ViewProjection viewProjection) {
 
 	// 弾の描画
-	if (m_bullet) {
-		m_bullet->Draw(viewProjection);
+	for (PlayerBullet* bullet : m_bullets) {
+		bullet->Draw(viewProjection);
 	}
 
 	// 3Dモデルを描画
@@ -125,14 +132,14 @@ void Player::Rotate() {
 void Player::Attack() {
 
 	// 発射キーをトリガーしたら
-	if (m_input->PushKey(DIK_SPACE)) {
+	if (m_input->TriggerKey(DIK_SPACE)) {
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(m_model, m_worldTransform.translation_);
 
 		// 弾を登録
-		m_bullet = newBullet;
+		m_bullets.push_back(newBullet);
 	}
 
 }

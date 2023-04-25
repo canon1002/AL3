@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete m_player;
 	// デバッグカメラの開放
 	delete m_debugCamera;
+
 }
 
 void GameScene::Initialize() {
