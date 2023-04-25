@@ -17,7 +17,8 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="position">初期座標</param>
-	void Initialize(Model* model,const Vector3& position);
+	/// <param name="velocity">速度</param>
+	void Initialize(Model* model, const Vector3& position, Vector3& velocity);
 
 	/// <summary>
 	/// 更新処理
@@ -30,6 +31,11 @@ public: // メンバ関数
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw(const ViewProjection& viewProjection);
 
+	/// <summary>
+	/// 弾が寿命を迎えたかどうか取得する
+	/// </summary>
+	bool IsDead() const { return m_isDead; }
+
 private: // メンバ変数
 
 	// ワールド変換データ
@@ -38,6 +44,14 @@ private: // メンバ変数
 	Model* m_model = nullptr;
 	// テクスチャハンドル
 	uint32_t m_textureHandle = 0u;
+	// 速度
+	Vector3 m_vel;
+	// 寿命<frm>
+	static const int32_t kLifeTime = 60 * 5;
+	// デスタイマー
+	int32_t m_deathTimer = kLifeTime;
+	// デスフラグ
+	bool m_isDead = false;
 
 };
 

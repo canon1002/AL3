@@ -73,9 +73,18 @@ void Player::Update() {
 	Attack();
 
 	// 弾の更新
-	for (PlayerBullet * bullet : m_bullets){
+	for (PlayerBullet* bullet : m_bullets) {
 		bullet->Update();
 	}
+
+	// デスフラグの立った弾を削除
+	m_bullets.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 
 	// 行列への変換
@@ -134,9 +143,16 @@ void Player::Attack() {
 	// 発射キーをトリガーしたら
 	if (m_input->TriggerKey(DIK_SPACE)) {
 
+		// 弾の速度を設定
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		// 速度ベクトルを自機の向きに合わせて回転させる
+		velocity = Matrix4::Transform(velocity, m_worldTransform.matWorld_);
+
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(m_model, m_worldTransform.translation_);
+		newBullet->Initialize(m_model, m_worldTransform.translation_, velocity);
 
 		// 弾を登録
 		m_bullets.push_back(newBullet);

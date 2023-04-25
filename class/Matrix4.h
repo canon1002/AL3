@@ -53,17 +53,17 @@ public: // 4x4行列 メゾット
 	static Matrix4x4 MakeIdentity();
 
 	/// <summary>
-	// 平行移動行列の作成
+	/// 平行移動行列の作成
 	/// <summary>
 	static Matrix4x4 MakeTranslateMatrix(const Vector3 translate);
 
 	/// <summary>
-	// 拡大縮小行列の作成
+	/// 拡大縮小行列の作成
 	/// <summary>
 	static Matrix4x4 MakeScaleMatrix(const Vector3 scale);
 
 	/// <summary>
-	// 回転行列の作成(X)
+	/// 回転行列の作成(X)
 	/// <summary>
 	static Matrix4x4 MakeRoatateXMatrix(float rad);
 
@@ -73,12 +73,12 @@ public: // 4x4行列 メゾット
 	static Matrix4x4 MakeRoatateYMatrix(float rad);
 	
 	/// <summary>
-	// 回転行列の作成(Z)
+	/// 回転行列の作成(Z)
 	/// <summary>
 	static Matrix4x4 MakeRoatateZMatrix(float rad);
 
 	/// <summary>
-	// 座標変換
+	/// 座標変換
 	/// <summary>
 	static Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
@@ -88,17 +88,17 @@ public: // 4x4行列 メゾット
 	static Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
 	/// <summary>
-	// 透視投影行列の作成
+	/// 透視投影行列の作成
 	/// <summary>
 	static Matrix4x4 MakePerspectiveMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 	/// <summary>
-	// 正射影行列の作成
+	/// 正射影行列の作成
 	/// <summary>
 	static Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
 
 	/// <summary>
-	// ビューポート変換行列の作成
+	/// ビューポート変換行列の作成
 	/// <summary>
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
