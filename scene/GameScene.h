@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "DebugCamera.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,6 +56,8 @@ private: // メンバ変数
 	uint32_t m_textureHandle = 0;
 	// 3Dモデルデータ
 	Model* m_model = nullptr;
+	// ワールド変換データ
+	WorldTransform m_worldTransform;
 	// ビュープロジェクション
 	ViewProjection m_viewProjection;
 	// 自キャラ
@@ -65,4 +68,6 @@ private: // メンバ変数
 	// デバッグカメラ有効
 	bool m_isDebugCameraAction = false;
 
+	// 敵
+	std::list<Enemy*> m_enemys;
 };

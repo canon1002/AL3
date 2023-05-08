@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "AxisIndicator.h"
 #include <cassert>
+#include "./class/Matrix4.h"
 
 GameScene::GameScene() {}
 
@@ -13,6 +14,10 @@ GameScene::~GameScene() {
 	delete m_player;
 	// デバッグカメラの開放
 	delete m_debugCamera;
+	// 敵クラスの開放
+	for (Enemy* enemy : m_enemys) {
+		delete enemy;
+	}
 
 }
 
@@ -38,6 +43,24 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&m_viewProjection);
+	// ワールド変換の初期化
+	m_worldTransform.Initialize();
+
+	///敵関連の処理
+	// 敵の速度を設定
+	const float kBulletSpeed = -0.05f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+
+	// 速度ベクトルを自機の向きに合わせて回転させる
+	velocity = Matrix4::Transform(velocity,m_worldTransform.matWorld_);
+
+	// 敵を生成し、初期化
+	Enemy* newEnemy = new Enemy();
+	newEnemy->Initialize(m_model, m_worldTransform.translation_, velocity);
+
+	// 敵を登録
+	m_enemys.push_back(newEnemy);
+
 
 }
 
@@ -46,6 +69,20 @@ void GameScene::Update() {
 	// 自キャラの更新
 	m_player->Update();
 	
+	// 敵キャラの更新
+	for (Enemy* enemy : m_enemys) {
+		enemy->Update();
+	}
+
+	// デスフラグの立った敵を削除
+	m_enemys.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+
 	// デバッグカメラの有効化
 	#ifdef _DEBUG
 
@@ -99,6 +136,11 @@ void GameScene::Draw() {
 
 	// 自キャラの描画処理
 	m_player->Draw(m_viewProjection);
+
+	// 敵キャラの更新
+	for (Enemy* enemy : m_enemys) {
+		enemy->Draw(m_viewProjection);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
