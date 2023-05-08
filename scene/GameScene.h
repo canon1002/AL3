@@ -56,8 +56,6 @@ private: // メンバ変数
 	uint32_t m_textureHandle = 0;
 	// 3Dモデルデータ
 	Model* m_model = nullptr;
-	// ワールド変換データ
-	WorldTransform m_worldTransform;
 	// ビュープロジェクション
 	ViewProjection m_viewProjection;
 	// 自キャラ
@@ -70,4 +68,6 @@ private: // メンバ変数
 
 	// 敵
 	std::list<Enemy*> m_enemys;
+	// 敵の初期座標
+	Vector3 enemyStartPos;
 };

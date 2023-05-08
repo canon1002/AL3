@@ -33,10 +33,10 @@ void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity)
 void Enemy::Update() {
 
 
-	// 時間経過でデス
-	if (--m_deathTimer <= 0) {
-		m_isDead = true;
-	}
+	//// 時間経過でデス
+	//if (--m_deathTimer <= 0) {
+	//	m_isDead = true;
+	//}
 
 	// 座標を移動させる
 	m_worldTransform.translation_.x += m_vel.x;

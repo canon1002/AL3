@@ -43,20 +43,19 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&m_viewProjection);
-	// ワールド変換の初期化
-	m_worldTransform.Initialize();
 
 	///敵関連の処理
-	// 敵の速度を設定
-	const float kBulletSpeed = -0.05f;
-	Vector3 velocity(0, 0, kBulletSpeed);
 
-	// 速度ベクトルを自機の向きに合わせて回転させる
-	velocity = Matrix4::Transform(velocity,m_worldTransform.matWorld_);
+	// 敵の速度を設定
+	const float kEnemySpeed = -0.1f;
+	Vector3 velocity(0, 0, kEnemySpeed);
+
+	// 敵の初期座標を設定
+	enemyStartPos = {0.0f, 0.0f, 20.0f};
 
 	// 敵を生成し、初期化
 	Enemy* newEnemy = new Enemy();
-	newEnemy->Initialize(m_model, m_worldTransform.translation_, velocity);
+	newEnemy->Initialize(m_model, enemyStartPos, velocity);
 
 	// 敵を登録
 	m_enemys.push_back(newEnemy);
