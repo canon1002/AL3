@@ -7,6 +7,17 @@
 /// </summary>
 class Enemy {
 
+public:	// 列挙体
+	
+	// 行動フェーズ
+	enum class Phase {
+		Approach,	// 接近
+		Leave,		// 離脱
+	};
+
+	// フェーズ
+	Phase m_phase = Enemy::Phase::Approach;
+
 public: // メンバ関数
 	Enemy();
 	~Enemy();

@@ -32,16 +32,46 @@ void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity)
 /// 更新処理
 void Enemy::Update() {
 
+	switch (m_phase) {
+
+	case Enemy::Phase::Approach:
+	default:
+
+		// 座標を移動させる
+		m_worldTransform.translation_.x += m_vel.x;
+		m_worldTransform.translation_.y += m_vel.y;
+		m_worldTransform.translation_.z += m_vel.z;
+
+		// 既定の位置でフェーズ移行
+		if (m_worldTransform.translation_.z < 0.0f) {
+
+			// 速度を再設定
+			m_vel.x = 0.2f;
+
+			// フェーズを変更
+			m_phase = Enemy::Phase::Leave;
+
+		}
+			
+
+		break;
+	case Enemy::Phase::Leave:
+
+		// 座標を移動させる
+		m_worldTransform.translation_.x += m_vel.x;
+		m_worldTransform.translation_.y += m_vel.y;
+		m_worldTransform.translation_.z += m_vel.z;
+
+		break;
+	
+	}
 
 	//// 時間経過でデス
 	//if (--m_deathTimer <= 0) {
 	//	m_isDead = true;
 	//}
 
-	// 座標を移動させる
-	m_worldTransform.translation_.x += m_vel.x;
-	m_worldTransform.translation_.y += m_vel.y;
-	m_worldTransform.translation_.z += m_vel.z;
+	
 
 	// 行列を計算・転送
 	m_worldTransform.UpdateMatrix();
