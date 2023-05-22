@@ -6,7 +6,14 @@
 Enemy::Enemy() {}
 
 /// デストラクタ
-Enemy::~Enemy() {}
+Enemy::~Enemy() {
+
+	// 弾クラスの開放
+	for (EnemyBullet* bullet : m_bullets) {
+		delete bullet;
+	}
+
+}
 
 /// 初期化
 void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
@@ -42,6 +49,14 @@ void Enemy::Update() {
 		m_worldTransform.translation_.y += m_vel.y;
 		m_worldTransform.translation_.z += m_vel.z;
 
+		//攻撃
+		if (m_attackCoolTime>0) {
+			m_attackCoolTime--;
+		} else if (m_attackCoolTime == 0) {
+			m_attackCoolTime = 30;
+			Attack();
+		}
+
 		// 既定の位置でフェーズ移行
 		if (m_worldTransform.translation_.z < 0.0f) {
 
@@ -71,7 +86,19 @@ void Enemy::Update() {
 	//	m_isDead = true;
 	//}
 
-	
+	// 弾の更新
+	for (EnemyBullet* bullet : m_bullets) {
+		bullet->Update();
+	}
+
+	// デスフラグの立った弾を削除
+	m_bullets.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
 	// 行列を計算・転送
 	m_worldTransform.UpdateMatrix();
@@ -80,11 +107,33 @@ void Enemy::Update() {
 /// 描画処理
 void Enemy::Draw(const ViewProjection& viewProjection) {
 
+	// 弾の描画
+	for (EnemyBullet* bullet : m_bullets) {
+		bullet->Draw(viewProjection);
+	}
+
 	// モデルの描画
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
 }
 
-void Enemy::Boon() {
 
-	
+// 発生処理
+void Enemy::Boon() {}
+
+// 攻撃
+void Enemy::Attack() {
+
+	// 弾の速度を設定
+	const float kBulletSpeed = 5.0f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+
+	// 速度ベクトルを自機の向きに合わせて回転させる
+	velocity = Matrix4::Transform(velocity, m_worldTransform.matWorld_);
+
+	// 弾を生成し、初期化
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialize(m_model, m_worldTransform.translation_, velocity);
+
+	// 弾を登録
+	m_bullets.push_back(newBullet);
 }

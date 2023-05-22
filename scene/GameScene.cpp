@@ -51,7 +51,7 @@ void GameScene::Initialize() {
 	Vector3 velocity(0, 0, kEnemySpeed);
 
 	// 敵の初期座標を設定
-	enemyStartPos = {0.0f, 0.0f, 20.0f};
+	enemyStartPos = {4.0f, 0.0f, 40.0f};
 
 	// 敵を生成し、初期化
 	Enemy* newEnemy = new Enemy();

@@ -1,6 +1,8 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "EnemyBullet.h"
+#include<list>
 
 /// <summary>
 /// 自キャラの弾
@@ -51,6 +53,11 @@ public: // メンバ関数
 	/// </summary>
 	void Boon();
 
+	/// <summary>
+	/// 敵の攻撃処理
+	/// </summary>
+	void Attack();
+
 private: // メンバ変数
 	// ワールド変換データ
 	WorldTransform m_worldTransform;
@@ -66,4 +73,8 @@ private: // メンバ変数
 	int32_t m_deathTimer = kLifeTime;
 	// デスフラグ
 	bool m_isDead = false;
+	// 弾
+	std::list<EnemyBullet*> m_bullets;
+	// 攻撃のクールタイム
+	int m_attackCoolTime;
 };
