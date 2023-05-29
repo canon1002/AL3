@@ -20,6 +20,8 @@ public: // メソッド
 	// 攻撃
 	void Attack();
 
+	Vector3 GetWorldPos();
+
 private: // フィールド
 
 	// ワールド変換データ

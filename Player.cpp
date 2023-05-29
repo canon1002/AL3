@@ -159,3 +159,13 @@ void Player::Attack() {
 	}
 
 }
+
+Vector3 Player::GetWorldPos() {
+
+	Vector3 worldPos;
+	worldPos.x = m_worldTransform.translation_.x;
+	worldPos.y = m_worldTransform.translation_.y;
+	worldPos.z = m_worldTransform.translation_.z;
+
+	return worldPos;
+}

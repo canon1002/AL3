@@ -59,6 +59,10 @@ void GameScene::Initialize() {
 
 	// 敵を登録
 	m_enemys.push_back(newEnemy);
+	// プレイヤーを貸し出す
+	for (Enemy* enemy : m_enemys) {
+		enemy->SetPlayer(m_player);
+	}
 
 
 }
@@ -70,6 +74,7 @@ void GameScene::Update() {
 	
 	// 敵キャラの更新
 	for (Enemy* enemy : m_enemys) {
+		enemy->SetPlayer(m_player);
 		enemy->Update();
 	}
 

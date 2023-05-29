@@ -1,5 +1,4 @@
 #include "EnemyBullet.h"
-#include "EnemyBullet.h"
 #include <assert.h>
 
 /// コンストラクタ
@@ -17,7 +16,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, Vector3& vel
 	// 受け取ったデータをメンバ変数に格納
 	m_model = model;
 	// テクスチャ読み込み
-	m_textureHandle = TextureManager::Load("white1x1.png");
+	m_textureHandle = TextureManager::Load("Bullet.png");
 
 	// ワールドトランスフォームの初期化
 	m_worldTransform.Initialize();

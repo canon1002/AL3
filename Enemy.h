@@ -2,7 +2,10 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
-#include<list>
+#include <list>
+
+// 自機クラスの前方宣言
+class Player;
 
 /// <summary>
 /// 自キャラの弾
@@ -58,7 +61,14 @@ public: // メンバ関数
 	/// </summary>
 	void Attack();
 
+	// プレイヤーを取得
+	void SetPlayer(Player* player) { m_player = player; }
+
+	// ワールド座標を取得
+	Vector3 GetWorldPos();
+
 private: // メンバ変数
+
 	// ワールド変換データ
 	WorldTransform m_worldTransform;
 	// モデル
@@ -76,5 +86,9 @@ private: // メンバ変数
 	// 弾
 	std::list<EnemyBullet*> m_bullets;
 	// 攻撃のクールタイム
-	int m_attackCoolTime;
+	int32_t m_attackCoolTime;
+
+	// 自キャラ
+	Player* m_player = nullptr;
+
 };
