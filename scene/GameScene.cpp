@@ -261,7 +261,6 @@ void GameScene::CheckAllCollisions() {
 				    (posD.y + radD) > (posC.y - radC) && (posD.y - radD) < (posC.y + radC) &&
 				    (posD.z + radD) > (posC.z - radC) && (posD.z - radD) < (posC.z + radC)) {
 					
-
 					playerBullet->OnCollision();
 					enemyBullet->OnCollision();
 				}
