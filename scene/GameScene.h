@@ -43,6 +43,12 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void CheckAllCollisions();
+
+private:
+
+	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -58,16 +64,27 @@ private: // メンバ変数
 	Model* m_model = nullptr;
 	// ビュープロジェクション
 	ViewProjection m_viewProjection;
-	// 自キャラ
-	Player* m_player = nullptr;
 	
 	//デバッグカメラ
 	DebugCamera* m_debugCamera = nullptr;
 	// デバッグカメラ有効
 	bool m_isDebugCameraAction = false;
+	
+	/// <summary>
+	/// オブジェクト
+	/// <summary>
 
+	// 自キャラ
+	Player* m_player = nullptr;
 	// 敵
 	std::list<Enemy*> m_enemys;
 	// 敵の初期座標
 	Vector3 enemyStartPos;
+
+	// ImGuiで値を入力する変数
+	float m_inputPos3A[3] = {0, 0, 0};
+	float m_inputPos3B[3] = {0, 0, 0};
+	float m_inputPos3C[3] = {0, 0, 0};
+	float m_inputPos3D[3] = {0, 0, 0};
+
 };

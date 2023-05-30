@@ -3,6 +3,8 @@
 #include "AxisIndicator.h"
 #include <cassert>
 #include "./class/Matrix4.h"
+#include "./collider/Collider.h"
+#include "ImGuiManager.h"
 
 GameScene::GameScene() {}
 
@@ -47,7 +49,7 @@ void GameScene::Initialize() {
 	///敵関連の処理
 
 	// 敵の速度を設定
-	const float kEnemySpeed = -0.1f;
+	const float kEnemySpeed = -0.02f;
 	Vector3 velocity(0, 0, kEnemySpeed);
 
 	// 敵の初期座標を設定
@@ -87,6 +89,8 @@ void GameScene::Update() {
 		return false;
 	});
 
+	CheckAllCollisions();
+
 	// デバッグカメラの有効化
 	#ifdef _DEBUG
 
@@ -109,6 +113,38 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の更新と転送
 		m_viewProjection.UpdateMatrix();
 	}
+
+	// 座標を表示(デバッグ)
+
+	// キャラクターの座標を画面表示する処理
+	ImGui::Begin("Position");
+	// 座標を代入
+	m_inputPos3A[0] = m_player->GetWorldPos().x;
+	m_inputPos3A[1] = m_player->GetWorldPos().y;
+	m_inputPos3A[2] = m_player->GetWorldPos().z;
+	ImGui::SliderFloat3("Player", m_inputPos3A, 0.0f, 1.0f);
+	
+	// 座標を代入
+	for (Enemy* enemy : m_enemys) {
+		m_inputPos3B[0] = enemy->GetWorldPos().x;
+		m_inputPos3B[1] = enemy->GetWorldPos().y;
+		m_inputPos3B[2] = enemy->GetWorldPos().z;
+		ImGui::SliderFloat3("Enemy", m_inputPos3B, 0.0f, 1.0f);
+	}
+
+	// 座標を代入
+	for (Enemy* enemy : m_enemys) {
+		for (EnemyBullet* enemyBullet : enemy->GetBullets()) {
+			m_inputPos3C[0] = enemyBullet->GetWorldPos().x;
+			m_inputPos3C[1] = enemyBullet->GetWorldPos().y;
+			m_inputPos3C[2] = enemyBullet->GetWorldPos().z;
+			ImGui::SliderFloat3("Enemy", m_inputPos3B, 0.0f, 1.0f);
+		}
+	}
+
+	ImGui::End();
+
+
 }
 
 void GameScene::Draw() {
@@ -162,4 +198,187 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+
+	// 判定対象の座標
+	Vector3 posA, posB, posC, posD;
+	float radA, radB, radC, radD;
+	// 弾リストの取得
+	const std::list<PlayerBullet*>& playerBullets = m_player->GetBullets();
+	for (Enemy* enemy : m_enemys) {
+		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+	}
+	// 座標をセット
+	posA = m_player->GetWorldPos();
+	radA = m_player->GetRadius();
+
+	// 敵とプレイヤーの弾の当たり判定
+	for (Enemy* enemy : m_enemys) {
+		posB = enemy->GetWorldPos();
+		radB = enemy->GetRadius();
+
+		for (PlayerBullet* playerBullet : playerBullets) {
+			posC = playerBullet->GetWorldPos();
+			radC = playerBullet->GetRadius();
+
+			// 距離の判定
+			if ((posB.x + radB) > (posC.x - radC) && (posB.x - radB) < (posC.x + radC) &&
+			    (posB.y + radB) > (posC.y - radC) && (posB.y - radB) < (posC.y + radC)) {
+
+				enemy->OnCollision();
+				playerBullet->OnCollision();
+			}
+		}
+	}
+
+	// 敵の弾
+	for (Enemy* enemy : m_enemys) {
+
+		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+			posD = enemyBullet->GetWorldPos();
+			radD = enemyBullet->GetRadius();
+
+			// プレイヤーとの距離の判定
+			if ((posA.x + radA) > (posD.x - radD) && (posA.x - radA) < (posD.x + radD) &&
+			    (posA.y + radA) > (posD.y - radD) && (posA.y - radA) < (posD.y + radD) &&
+			    (posA.z + radA) > (posD.z - radD) && (posA.z - radA) < (posD.z + radD)) {
+
+				m_player->OnCollision();
+				enemyBullet->OnCollision();
+			}
+
+			// プレイヤーの弾との距離の判定
+			for (PlayerBullet* playerBullet : playerBullets) {
+				posC = playerBullet->GetWorldPos();
+				radC = playerBullet->GetRadius();
+
+				// 距離の判定
+				if ((posD.x + radD) > (posC.x - radC) && (posD.x - radD) < (posC.x + radC) &&
+				    (posD.y + radD) > (posC.y - radC) && (posD.y - radD) < (posC.y + radC) &&
+				    (posD.z + radD) > (posC.z - radC) && (posD.z - radD) < (posC.z + radC)) {
+					
+
+					playerBullet->OnCollision();
+					enemyBullet->OnCollision();
+				}
+			}
+		}
+	}
+
+	
+	
+
+	
+	
+
+	/*
+	// 自弾・敵弾リストの取得
+	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
+	for (Enemy* enemy : m_enemys) {
+		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+	}
+
+	// コライダー
+	std::list<Collider*> m_colliders;
+
+	// コライダーをリストに登録
+	m_colliders.push_back(player);
+	for (Enemy* enemy : m_enemys) {
+		m_colliders.push_back(enemy);
+	}
+
+	// 自弾・敵弾すべて
+	for (PlayerBullet* playerBullet : playerBullets) {
+		m_colliders.push_back(playerBullet);
+	}
+
+	for (EnemyBullet* enemyBullet : enemyBullets) {
+		m_colliders.push_back(enemyBullet);
+	}
+	*/
+
+	/* リスト内のペアを総当たり
+	std::list<Collider*>::iterator itrA = m_colliders.begin();
+	for (; itrA != m_colliders.end(); ++itrA) {
+
+		// イテレーターからコライダーを取得
+		Collider* colliderA = (*itrA);
+
+		// このイテレーターは前のイテレーターの次の要素から回す
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
+
+		for (; itrB != m_colliders.end(); ++itrB) {
+
+			// イテレーターからコライダーを取得
+			Collider* colliderB = (*itrB);
+
+			// 当たり判定
+			//CheckCollisionPair(colliderA, colliderB);
+
+			// イテレーターBはイテレーターAの次の要素から回す
+			std::list<Collider*>::iterator itrC = itrB;
+			itrC++;
+
+			for (; itrC != m_colliders.end(); ++itrC) {
+
+				// イテレーターからコライダーを取得
+				Collider* colliderC = (*itrC);
+
+				// 当たり判定
+				CheckCollisionPair(colliderB, colliderC);
+
+				// イテレーターBはイテレーターAの次の要素から回す
+				std::list<Collider*>::iterator itrD = itrC;
+				itrD++;
+
+				for (; itrD != m_colliders.end(); ++itrD) {
+
+					// イテレーターからコライダーを取得
+					Collider* colliderD = (*itrD);
+
+					// 当たり判定
+					CheckCollisionPair(colliderC, colliderD);
+				}
+			}
+		}
+	}
+	*/
+}
+
+void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+
+	// 衝突フィルタリング
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+	    (colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0)
+	{
+		return;
+	}
+
+	// コライダーのワールド座標を取得
+	//Vector3 posA = colliderA->GetWorldPos();
+	float radA = colliderA->GetRadius();
+	//Vector3 posB = colliderB->GetWorldPos();
+	float radB = colliderB->GetRadius();
+
+	// 距離の判定
+	if ((//posA.x + radA) > (posB.x - radB) && (posA.x - radA) < (posB.x + radB) &&
+	    (//posA.y + radA) > (posB.y - radB) && (posA.y - radA) < (posB.y + radB
+			1))) {
+
+		colliderA->OnCollision(colliderB);
+		colliderB->OnCollision(colliderA);
+
+		// エフェクトを生成し、初期化
+		// Effect* newEffect = new Effect();
+		// newEffect->Initialize(EFFECT_TYPE::DISCRETE, { quadA.rightTop.x - (quadA.rightTop.x -
+		// quadA.leftTop.x),quadA.leftTop.y });
+
+		// エフェクトを登録
+		// m_effects.push_back(newEffect);
+	}
 }

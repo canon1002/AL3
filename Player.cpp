@@ -1,7 +1,6 @@
 ﻿#include "Player.h"
 #include <assert.h>
 #include "./class/Matrix4.h"
-#include "ImGuiManager.h"
 
 // コンストラクタ
 Player::Player() {}
@@ -31,6 +30,9 @@ void Player::Initialize(Model* model,uint32_t textureHandle) {
 
 	// シングルインスタンスを取得する
 	m_input = Input::GetInstance();
+
+	// 半径を設定
+	SetRadius(0.5f);
 
 }
 
@@ -97,18 +99,6 @@ void Player::Update() {
 	// 行列を計算・転送
 	m_worldTransform.UpdateMatrix();
 
-
-	// 座標を表示(デバッグ)
-
-	// キャラクターの座標を画面表示する処理
-	ImGui::Begin("Player");
-	// 座標を代入
-	m_inputPos3[0] = m_worldTransform.translation_.x;
-	m_inputPos3[1] = m_worldTransform.translation_.y;
-	m_inputPos3[2] = m_worldTransform.translation_.z;
-	ImGui::SliderFloat3("Position", m_inputPos3, 0.0f, 1.0f);
-	ImGui::End();
-
 }
 
 // 描画
@@ -160,12 +150,3 @@ void Player::Attack() {
 
 }
 
-Vector3 Player::GetWorldPos() {
-
-	Vector3 worldPos;
-	worldPos.x = m_worldTransform.translation_.x;
-	worldPos.y = m_worldTransform.translation_.y;
-	worldPos.z = m_worldTransform.translation_.z;
-
-	return worldPos;
-}

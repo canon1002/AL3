@@ -194,6 +194,12 @@
     <ClInclude Include="EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="collider\Collider.h">
+      <Filter>ヘッダー ファイル\class</Filter>
+    </ClInclude>
+    <ClInclude Include="collider\CollisionConfig.h">
+      <Filter>ヘッダー ファイル\class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">

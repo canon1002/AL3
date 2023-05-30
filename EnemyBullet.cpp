@@ -1,52 +1,55 @@
-#include "EnemyBullet.h"
+﻿#include "EnemyBullet.h"
 #include <assert.h>
 
-/// �R���X�g���N�^
+/// ・R・・・X・g・・・N・^
 EnemyBullet::EnemyBullet() {}
 
-/// �f�X�g���N�^
+/// ・f・X・g・・・N・^
 EnemyBullet::~EnemyBullet() {}
 
-/// ������
+/// ・・・・・ｻ
 void EnemyBullet::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
 
-	// NULL�|�C���^�`�F�b�N
+	// NULL・|・C・・・^・`・F・b・N
 	assert(model);
 
-	// �󂯎�����f�[�^�������o�ϐ��Ɋi�[
+	// ・・・ｯ・・・ﾁ・ｽ・f・[・^・・・・・・・o・ﾏ・・・ﾉ・i・[
 	m_model = model;
-	// �e�N�X�`���ǂݍ���
+	// ・e・N・X・`・・・ﾇ・ﾝ・・・ﾝ
 	m_textureHandle = TextureManager::Load("Bullet.png");
 
-	// ���[���h�g�����X�t�H�[���̏�����
+	// ・・・[・・・h・g・・・・・X・t・H・[・・ﾌ・・・・・ｻ
 	m_worldTransform.Initialize();
-	// �����Ŏ󂯎�����������W���Z�b�g
+	// ・・・・・ﾅ・・・ｯ・・・ﾁ・ｽ・・・・・ﾀ・W・・・Z・b・g
 	m_worldTransform.translation_ = position;
 
-	// �����Ŏ󂯎�������x�������o�ϐ��ɃZ�b�g
+	// ・・・・・ﾅ・・・ｯ・・・ﾁ・ｽ・ｬ・x・・・・・・・o・ﾏ・・・ﾉ・Z・b・g
 	m_vel = velocity;
+
+	// ・ｼ・a・・・ﾝ・・
+	SetRadius(0.5f);
 }
 
-/// �X�V����
+/// ・X・V・・・・
 void EnemyBullet::Update() {
 
-	// ���Ԍo�߂Ńf�X
+	// ・・・ﾔ・o・ﾟ・ﾅ・f・X
 	if (--m_deathTimer <= 0) {
 		m_isDead = true;
 	}
 
-	// ���W���ړ�������
+	// ・ﾀ・W・・・ﾚ・ｮ・ｳ・ｹ・・
 	m_worldTransform.translation_.x += m_vel.x;
 	m_worldTransform.translation_.y += m_vel.y;
 	m_worldTransform.translation_.z += m_vel.z;
 
-	// �s����v�Z�E�]��
+	// ・s・・・・・v・Z・E・]・・
 	m_worldTransform.UpdateMatrix();
 }
 
-/// �`�揈��
+/// ・`・・・・・・
 void EnemyBullet::Draw(const ViewProjection& viewProjection) {
 
-	// ���f���̕`��
+	// ・・・f・・・ﾌ・`・・
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
 }

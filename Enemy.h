@@ -1,94 +1,125 @@
-#pragma once
+﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
 #include <list>
+#include "./collider/Collider.h"
 
-// 自機クラスの前方宣言
+// ・・ｪ・ｩ・・・ｯ・・ｩ・・ｹ・・ｮ・・・・・ｹ・ｮ｣・ｨ
 class Player;
 
 /// <summary>
-/// 自キャラの弾
+/// ・・ｪ・・ｭ・・｣・・ｩ・・ｮ・ｼｾ
 /// </summary>
-class Enemy {
-
-public:	// 列挙体
+class Enemy : public Collider 
+{
+public:	// ・・・・・・・ｽ・
 	
-	// 行動フェーズ
+	// ・｡・・・・・・・・・ｧ・・ｼ・・ｺ
 	enum class Phase {
-		Approach,	// 接近
-		Leave,		// 離脱
+		Approach,	// ・・･・ｿ・
+		Leave,		// ・・｢・・ｱ
 	};
 
-	// フェーズ
+	// ・・・・・ｧ・・ｼ・・ｺ
 	Phase m_phase = Enemy::Phase::Approach;
 
-public: // メンバ関数
+public: // ・・｡・・ｳ・・・・・｢・・ｰ
 	Enemy();
 	~Enemy();
 
 	/// <summary>
-	/// 初期化
+	/// ・・・・・・・・・
 	/// </summary>
-	/// <param name="model">モデル</param>
-	/// <param name="position">初期座標</param>
-	/// <param name="velocity">速度</param>
+	/// <param name="model">・・｢・・・・・ｫ</param>
+	/// <param name="position">・・・・・・・ｺｧ・ｨ・</param>
+	/// <param name="velocity">・・・ｺｦ</param>
 	void Initialize(Model* model, const Vector3& position, Vector3& velocity);
 
 	/// <summary>
-	/// 更新処理
+	/// ・・ｴ・・ｰ・・ｦ・・・
 	/// </summary>
 	void Update();
 
 	/// <summary>
-	/// 描画処理
+	/// ・・・・・ｻ・・ｦ・・・
 	/// </summary>
-	/// <param name="viewProjection">ビュープロジェクション</param>
+	/// <param name="viewProjection">・・・・・･・・ｼ・・・・・ｭ・・ｸ・・ｧ・・ｯ・・ｷ・・ｧ・・ｳ</param>
 	void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
-	/// 敵が寿命を迎えたかどうか取得する
+	/// ・・ｵ・・・・ｯｿ・・ｽ・・・・ｿ・・・・・・・・・・・・ｩ・・・・・・・・・・ｾ・・・・・・・
 	/// </summary>
 	bool IsDead() const { return m_isDead; }
 
 	/// <summary>
-	/// 敵の発生処理
+	/// ・・ｵ・・ｮ・・ｺ・・・・・ｦ・・・
 	/// </summary>
 	void Boon();
 
 	/// <summary>
-	/// 敵の攻撃処理
+	/// ・・ｵ・・ｮ・・ｻ・・・・・ｦ・・・
 	/// </summary>
 	void Attack();
 
-	// プレイヤーを取得
+	// ・ｼｾ・・ｪ・・ｹ・・・・・ｮ・・・・ｾ・
+	const std::list<EnemyBullet*>& GetBullets() { return m_bullets; }
+
+	// ・・・・・ｬ・・､・・､・・ｼ・・・・・・・ｾ・
 	void SetPlayer(Player* player) { m_player = player; }
 
-	// ワールド座標を取得
-	Vector3 GetWorldPos();
+	// ・・ｯ・・ｼ・・ｫ・・・・ｺｧ・ｨ・・・・・・・・ｾ・
+	Vector3 GetWorldPos() override {
+		Vector3 result = {};
+		result.x = m_worldTransform.translation_.x;
+		result.y = m_worldTransform.translation_.y;
+		result.z = m_worldTransform.translation_.z;
+		return result;
+	}
 
-private: // メンバ変数
+	void OnCollision() override { }
+	void OnCollision(Collider* collider) override {}
 
-	// ワールド変換データ
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)・・・・・・・ｾ・
+	virtual uint32_t GetCollisionAttribute() override { return m_collisionAttribute; }
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)・・・・ｨｭ・ｮ・
+	virtual void SetCollisionAttribute(uint32_t collisionAttribute) override {
+		m_collisionAttribute = collisionAttribute;
+	}
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)・・・・・・・ｾ・
+	virtual uint32_t GetCollisionMask() override { return m_collisionMask; }
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)・・・・ｨｭ・ｮ・
+	virtual void SetCollisionMask(uint32_t collisionMask) override {
+		m_collisionMask = collisionMask;
+	}
+
+
+private: // ・・｡・・ｳ・・・・､・・・ｰ
+
+	// ・・ｯ・・ｼ・・ｫ・・・・､・・・・・・・・・ｼ・・ｿ
 	WorldTransform m_worldTransform;
-	// モデル
+	// ・・｢・・・・・ｫ
 	Model* m_model = nullptr;
-	// テクスチャハンドル
+	// ・・・・・ｯ・・ｹ・・・・・｣・・・・・ｳ・・・・・ｫ
 	uint32_t m_textureHandle = 0u;
-	// 速度
+	// ・・・ｺｦ
 	Vector3 m_vel;
-	// 寿命<frm>
+	// ・ｯｿ・・ｽ<frm>
 	static const int32_t kLifeTime = 60 * 5;
-	// デスタイマー
+	// ・・・・・ｹ・・ｿ・・､・・・・・ｼ
 	int32_t m_deathTimer = kLifeTime;
-	// デスフラグ
+	// ・・・・・ｹ・・・・・ｩ・・ｰ
 	bool m_isDead = false;
-	// 弾
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)
+	uint32_t m_collisionAttribute = 0xffffffff;
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)
+	uint32_t m_collisionMask = 0xffffffff;
+	// ・ｼｾ
 	std::list<EnemyBullet*> m_bullets;
-	// 攻撃のクールタイム
+	// ・・ｻ・・・・・ｮ・・ｯ・・ｼ・・ｫ・・ｿ・・､・・
 	int32_t m_attackCoolTime;
 
-	// 自キャラ
+	// ・・ｪ・・ｭ・・｣・・ｩ
 	Player* m_player = nullptr;
 
 };

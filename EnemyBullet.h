@@ -1,57 +1,87 @@
-#pragma once
+﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "./collider/Collider.h"
 
 /// <summary>
-/// �G�L�����̒e
+/// ・・ｵ・・ｭ・・｣・・ｩ・・ｮ・ｼｾ
 /// </summary>
 /// 
-class EnemyBullet 
+class EnemyBullet : public Collider
 {
 
-public: // �����o�֐�
+public: // ・・｡・・ｳ・・・・・｢・・ｰ
 	EnemyBullet();
 	~EnemyBullet();
 
 	/// <summary>
-	/// ������
+	/// ・・・・・・・・・
 	/// </summary>
-	/// <param name="model">���f��</param>
-	/// <param name="position">�������W</param>
-	/// <param name="velocity">���x</param>
+	/// <param name="model">・・｢・・・・・ｫ</param>
+	/// <param name="position">・・・・・・・ｺｧ・ｨ・</param>
+	/// <param name="velocity">・・・ｺｦ</param>
 	void Initialize(Model* model, const Vector3& position, Vector3& velocity);
 
 	/// <summary>
-	/// �X�V����
+	/// ・・ｴ・・ｰ・・ｦ・・・
 	/// </summary>
 	void Update();
 
 	/// <summary>
-	/// �`�揈��
+	/// ・・・・・ｻ・・ｦ・・・
 	/// </summary>
-	/// <param name="viewProjection">�r���[�v���W�F�N�V����</param>
+	/// <param name="viewProjection">・・・・・･・・ｼ・・・・・ｭ・・ｸ・・ｧ・・ｯ・・ｷ・・ｧ・・ｳ</param>
 	void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
-	/// �e���������}�������ǂ����擾����
+	/// ・ｼｾ・・・・ｯｿ・・ｽ・・・・ｿ・・・・・・・・・・・・ｩ・・・・・・・・・・ｾ・・・・・・・
 	/// </summary>
 	bool IsDead() const { return m_isDead; }
 
-private: // �����o�ϐ�
-	// ���[���h�ϊ��f�[�^
+	// ・・ｯ・・ｼ・・ｫ・・・・ｺｧ・ｨ・・・・・・・・ｾ・
+	Vector3 GetWorldPos() override {
+		Vector3 result = {};
+		result.x = m_worldTransform.translation_.x;
+		result.y = m_worldTransform.translation_.y;
+		result.z = m_worldTransform.translation_.z;
+		return result;
+	}
+
+	void OnCollision() override { m_isDead = true; }
+	void OnCollision(Collider* collider) override { m_isDead = true; }
+
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)・・・・・・・ｾ・
+	virtual uint32_t GetCollisionAttribute() override { return m_collisionAttribute; }
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)・・・・ｨｭ・ｮ・
+	virtual void SetCollisionAttribute(uint32_t collisionAttribute) override {
+		m_collisionAttribute = collisionAttribute;
+	}
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)・・・・・・・ｾ・
+	virtual uint32_t GetCollisionMask() override { return m_collisionMask; }
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)・・・・ｨｭ・ｮ・
+	virtual void SetCollisionMask(uint32_t collisionMask) override {
+		m_collisionMask = collisionMask;
+	}
+
+
+private: // ・・｡・・ｳ・・・・､・・・ｰ
+	// ・・ｯ・・ｼ・・ｫ・・・・､・・・・・・・・・ｼ・・ｿ
 	WorldTransform m_worldTransform;
-	// ���f��
+	// ・・｢・・・・・ｫ
 	Model* m_model = nullptr;
-	// �e�N�X�`���n���h��
+	// ・・・・・ｯ・・ｹ・・・・・｣・・・・・ｳ・・・・・ｫ
 	uint32_t m_textureHandle = 0u;
-	// ���x
+	// ・・・ｺｦ
 	Vector3 m_vel;
-	// ����<frm>
-	static const int32_t kLifeTime = 60 * 5;
-	// �f�X�^�C�}�[
+	// ・ｯｿ・・ｽ<frm>
+	static const int32_t kLifeTime = 60 * 15;
+	// ・・・・・ｹ・・ｿ・・､・・・・・ｼ
 	int32_t m_deathTimer = kLifeTime;
-	// �f�X�t���O
+	// ・・・・・ｹ・・・・・ｩ・・ｰ
 	bool m_isDead = false;
-	//�N�[���^�C��
-	
+	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)
+	uint32_t m_collisionAttribute = 0xffffffff;
+	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)
+	uint32_t m_collisionMask = 0xffffffff;
+
 };

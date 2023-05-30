@@ -1,42 +1,46 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Player.h"
 #include <assert.h>
 #include "./class/Matrix4.h"
 
-/// コンストラクタ
+/// ・・ｳ・・ｳ・・ｹ・・・・・ｩ・・ｯ・・ｿ
 Enemy::Enemy() {}
 
-/// デストラクタ
+/// ・・・・・ｹ・・・・・ｩ・・ｯ・・ｿ
 Enemy::~Enemy() {
 
-	// 弾クラスの開放
+	// ・ｼｾ・・ｯ・・ｩ・・ｹ・・ｮ・・・・・ｾ
 	for (EnemyBullet* bullet : m_bullets) {
 		delete bullet;
 	}
 
 }
 
-/// 初期化
+/// ・・・・・・・・・
 void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
 
-	// NULLポインタチェック
+	// NULL・・・・・､・・ｳ・・ｿ・・・・・ｧ・・・・・ｯ
 	assert(model);
 
-	// 受け取ったデータをメンバ変数に格納
+	// ・・・・・・・・・・・｣・・・・・・・・ｼ・・ｿ・・・・・｡・・ｳ・・・・､・・・ｰ・・ｫ・ｼ・ｴ・
 	m_model = model;
-	// テクスチャ読み込み
+	// ・・・・・ｯ・・ｹ・・・・・｣・ｪｭ・・ｿ・ｾｼ・・ｿ
 	m_textureHandle = TextureManager::Load("enemySoul.jpg");
 
-	// ワールドトランスフォームの初期化
+	// ・・ｯ・・ｼ・・ｫ・・・・・・・・ｩ・・ｳ・・ｹ・・・・・ｩ・・ｼ・・・・ｮ・・・・・・・・・
 	m_worldTransform.Initialize();
-	// 引数で受け取った初期座標をセット
+	// ・ｼ・・・ｰ・・ｧ・・・・・・・・・・・｣・・・・・・・・・・ｺｧ・ｨ・・・・・・ｻ・・・・・・
 	m_worldTransform.translation_ = position;
 
-	// 引数で受け取った速度をメンバ変数にセット
+	// ・ｼ・・・ｰ・・ｧ・・・・・・・・・・・｣・・・・・・ｺｦ・・・・・｡・・ｳ・・・・､・・・ｰ・・ｫ・・ｻ・・・・・・
 	m_vel = velocity;
+
+	// ・・・・ｾ・・・・・ｨｭ・ｮ・
+	SetRadius(0.5f);
+
 }
 
-/// 更新処理
+/// ・・ｴ・・ｰ・・ｦ・・・
 void Enemy::Update() {
 
 	switch (m_phase) {
@@ -44,12 +48,12 @@ void Enemy::Update() {
 	case Enemy::Phase::Approach:
 	default:
 
-		// 座標を移動させる
+		// ・ｺｧ・ｨ・・・・・ｧｻ・・・・・・・・・・・・
 		m_worldTransform.translation_.x += m_vel.x;
 		m_worldTransform.translation_.y += m_vel.y;
 		m_worldTransform.translation_.z += m_vel.z;
 
-		// 攻撃
+		// ・・ｻ・・・
 		if (m_attackCoolTime > 0) {
 			m_attackCoolTime--;
 		} else if (m_attackCoolTime == 0) {
@@ -57,13 +61,13 @@ void Enemy::Update() {
 			Attack();
 		}
 
-		// 既定の位置でフェーズ移行
+		// ・・｢・ｮ・・・ｮ・ｽ・・ｽｮ・・ｧ・・・・・ｧ・・ｼ・・ｺ・ｧｻ・｡・
 		if (m_worldTransform.translation_.z < 0.0f) {
 
-			// 速度を再設定
-			m_vel.x = 0.2f;
+			// ・・・ｺｦ・・・・・・・ｨｭ・ｮ・
+			m_vel.x = 0.02f;
 
-			// フェーズを変更
+			// ・・・・・ｧ・・ｼ・・ｺ・・・・､・・・ｴ
 			m_phase = Enemy::Phase::Leave;
 
 		}
@@ -72,7 +76,7 @@ void Enemy::Update() {
 		break;
 	case Enemy::Phase::Leave:
 
-		// 座標を移動させる
+		// ・ｺｧ・ｨ・・・・・ｧｻ・・・・・・・・・・・・
 		m_worldTransform.translation_.x += m_vel.x;
 		m_worldTransform.translation_.y += m_vel.y;
 		m_worldTransform.translation_.z += m_vel.z;
@@ -81,17 +85,17 @@ void Enemy::Update() {
 	
 	}
 
-	//// 時間経過でデス
+	//// ・・・・・・・ｵ・・・・・・ｧ・・・・・ｹ
 	//if (--m_deathTimer <= 0) {
 	//	m_isDead = true;
 	//}
 
-	// 弾の更新
+	// ・ｼｾ・・ｮ・・ｴ・・ｰ
 	for (EnemyBullet* bullet : m_bullets) {
 		bullet->Update();
 	}
 
-	// デスフラグの立った弾を削除
+	// ・・・・・ｹ・・・・・ｩ・・ｰ・・ｮ・ｫ・・・｣・・・・ｼｾ・・・・・・・・､
 	m_bullets.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -100,44 +104,44 @@ void Enemy::Update() {
 		return false;
 	});
 
-	// 行列を計算・転送
+	// ・｡・・・・・・・・ｨ・・ｮ・・・ｻ・ｻ｢・・
 	m_worldTransform.UpdateMatrix();
 }
 
-/// 描画処理
+/// ・・・・・ｻ・・ｦ・・・
 void Enemy::Draw(const ViewProjection& viewProjection) {
 
-	// 弾の描画
+	// ・ｼｾ・・ｮ・・・・・ｻ
 	for (EnemyBullet* bullet : m_bullets) {
 		bullet->Draw(viewProjection);
 	}
 
-	// モデルの描画
+	// ・・｢・・・・・ｫ・・ｮ・・・・・ｻ
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
 }
 
 
-// 発生処理
+// ・・ｺ・・・・・ｦ・・・
 void Enemy::Boon() {}
 
-// 攻撃
+// ・・ｻ・・・
 void Enemy::Attack() {
 
 	assert(m_player);
 
-	// 弾の速度を設定
-	const float kBulletSpeed = 0.005f;
+	// ・ｼｾ・・ｮ・・・ｺｦ・・・・ｨｭ・ｮ・
+	const float kBulletSpeed = 0.0005f;
 
-	// プレイヤーの座標を取得
+	// ・・・・・ｬ・・､・・､・・ｼ・・ｮ・ｺｧ・ｨ・・・・・・・・ｾ・
 	Vector3 m_worldPos = m_player->GetWorldPos();
-	// 敵の座標を取得
+	// ・・ｵ・・ｮ・ｺｧ・ｨ・・・・・・・・ｾ・
 	Vector3 m_enemyWorldPos = GetWorldPos();
-	// 差分を取得
+	// ・ｷｮ・・・・・・・・・・ｾ・
 	Vector3 SubPos;
 	SubPos.x = m_worldPos.x - m_enemyWorldPos.x;
 	SubPos.y = m_worldPos.y - m_enemyWorldPos.y;
 	SubPos.z = m_worldPos.z - m_enemyWorldPos.z;
-	// ベクトルの正規化
+	// ・・・・・ｯ・・・・・ｫ・・ｮ・ｭ｣・ｦ・・・・
 	float length = sqrtf((SubPos.x * SubPos.x) + (SubPos.y * SubPos.y) + (SubPos.z * SubPos.z));
 	if (length > 0) {
 		length = 1 / length;
@@ -151,20 +155,10 @@ void Enemy::Attack() {
 	velocity.y = SubPos.y * kBulletSpeed;
 	velocity.z = SubPos.z * kBulletSpeed;
 
-	// 弾を生成し、初期化
+	// ・ｼｾ・・・・・・・・・・・・・・・・・・・・・・・
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(m_model, m_worldTransform.translation_, velocity);
 
-	// 弾を登録
+	// ・ｼｾ・・・・・ｻ・・ｲ
 	m_bullets.push_back(newBullet);
-}
-
-Vector3 Enemy::GetWorldPos() {
-
-	Vector3 worldPos;
-	worldPos.x = m_worldTransform.translation_.x;
-	worldPos.y = m_worldTransform.translation_.y;
-	worldPos.z = m_worldTransform.translation_.z;
-
-	return worldPos;
 }

@@ -27,6 +27,9 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, Vector3& ve
 	// 引数で受け取った速度をメンバ変数にセット
 	m_vel = velocity;
 
+	// 半径を設定
+	SetRadius(0.5f);
+
 }
 
 
