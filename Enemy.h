@@ -71,9 +71,9 @@ public: // ・・｡・・ｳ・・・・・｢・・ｰ
 	// ・・ｯ・・ｼ・・ｫ・・・・ｺｧ・ｨ・・・・・・・・ｾ・
 	Vector3 GetWorldPos() override {
 		Vector3 result = {};
-		result.x = m_worldTransform.translation_.x;
-		result.y = m_worldTransform.translation_.y;
-		result.z = m_worldTransform.translation_.z;
+		result.x = m_worldTransform.matWorld_.m[3][0];
+		result.y = m_worldTransform.matWorld_.m[3][1];
+		result.z = m_worldTransform.matWorld_.m[3][2];
 		return result;
 	}
 
