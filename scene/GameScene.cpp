@@ -214,65 +214,46 @@ void GameScene::CheckAllCollisions() {
 	posA = m_player->GetWorldPos();
 	radA = m_player->GetRadius();
 
-	// 敵とプレイヤーの弾の当たり判定
+		// コライダー
+	std::list<Collider*> m_colliders;
+
+	// コライダーをリストに登録
+	m_colliders.push_back(m_player);
 	for (Enemy* enemy : m_enemys) {
-		posB = enemy->GetWorldPos();
-		radB = enemy->GetRadius();
-
-		for (PlayerBullet* playerBullet : playerBullets) {
-			posC = playerBullet->GetWorldPos();
-			radC = playerBullet->GetRadius();
-
-			// 距離の判定
-			if ((posB.x + radB) > (posC.x - radC) && (posB.x - radB) < (posC.x + radC) &&
-			    (posB.y + radB) > (posC.y - radC) && (posB.y - radB) < (posC.y + radC)) {
-
-				enemy->OnCollision();
-				playerBullet->OnCollision();
-			}
-		}
+		m_colliders.push_back(enemy);
 	}
 
-	// 敵の弾
+	// 自弾・敵弾すべて
+	for (PlayerBullet* playerBullet : playerBullets) {
+		m_colliders.push_back(playerBullet);
+	}
 	for (Enemy* enemy : m_enemys) {
-
+		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+			m_colliders.push_back(enemyBullet);
+		}
+	}
+	for (Enemy* enemy : m_enemys) {
 		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
 
-		for (EnemyBullet* enemyBullet : enemyBullets) {
-			posD = enemyBullet->GetWorldPos();
-			radD = enemyBullet->GetRadius();
+		// プレイヤーと敵の当たり判定
+		CheckCollisionPair(m_player, enemy);
 
-			// プレイヤーとの距離の判定
-			if ((posA.x + radA) > (posD.x - radD) && (posA.x - radA) < (posD.x + radD) &&
-			    (posA.y + radA) > (posD.y - radD) && (posA.y - radA) < (posD.y + radD) &&
-			    (posA.z + radA) > (posD.z - radD) && (posA.z - radA) < (posD.z + radD)) {
+		for (PlayerBullet* playerBullet : playerBullets) {
+			// 敵とプレイヤーの弾の当たり判定
+			CheckCollisionPair(playerBullet, enemy);
 
-				m_player->OnCollision();
-				enemyBullet->OnCollision();
-			}
-
-			// プレイヤーの弾との距離の判定
-			for (PlayerBullet* playerBullet : playerBullets) {
-				posC = playerBullet->GetWorldPos();
-				radC = playerBullet->GetRadius();
-
-				// 距離の判定
-				if ((posD.x + radD) > (posC.x - radC) && (posD.x - radD) < (posC.x + radC) &&
-				    (posD.y + radD) > (posC.y - radC) && (posD.y - radD) < (posC.y + radC) &&
-				    (posD.z + radD) > (posC.z - radC) && (posD.z - radD) < (posC.z + radC)) {
-					
-					playerBullet->OnCollision();
-					enemyBullet->OnCollision();
-				}
+			// 敵の弾とプレイヤーの弾の当たり判定
+			for (EnemyBullet* enemyBullet : enemyBullets) {
+				CheckCollisionPair(playerBullet, enemyBullet);
 			}
 		}
+
+		// 敵の弾とプレイヤーの当たり判定
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+			CheckCollisionPair(m_player, enemyBullet);
+		}
 	}
-
-	
-	
-
-	
-	
 
 	/*
 	// 自弾・敵弾リストの取得
@@ -359,16 +340,17 @@ void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	}
 
 	// コライダーのワールド座標を取得
-	//Vector3 posA = colliderA->GetWorldPos();
+	Vector3 posA = colliderA->GetWorldPos();
 	float radA = colliderA->GetRadius();
-	//Vector3 posB = colliderB->GetWorldPos();
+	Vector3 posB = colliderB->GetWorldPos();
 	float radB = colliderB->GetRadius();
 
 	// 距離の判定
-	if ((//posA.x + radA) > (posB.x - radB) && (posA.x - radA) < (posB.x + radB) &&
-	    (//posA.y + radA) > (posB.y - radB) && (posA.y - radA) < (posB.y + radB
-			1))) {
-
+	if ((posA.x + radA) > (posB.x - radB) && (posA.x - radA) < (posB.x + radB) &&
+	    (posA.y + radA) > (posB.y - radB) && (posA.y - radA) < (posB.y + radB) &&
+	    (posA.z + radA) > (posB.z - radB) && (posA.z - radA) < (posB.z + radB)) 
+	{		
+		
 		colliderA->OnCollision(colliderB);
 		colliderB->OnCollision(colliderA);
 
