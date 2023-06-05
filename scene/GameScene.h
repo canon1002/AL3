@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "DebugCamera.h"
 #include "Enemy.h"
+#include "Skydome.h"
 #include "CollisionManager.h"
 #include <memory>
 
@@ -72,6 +73,9 @@ private: // メンバ変数
 	/// <summary>
 	/// オブジェクト
 	/// <summary>
+
+	// 天球
+	Skydome* m_skydome = nullptr;
 
 	// 自キャラ
 	Player* m_player = nullptr;

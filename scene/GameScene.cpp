@@ -11,15 +11,17 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 
-	// 3Dモデルデータの開放
+	// 3Dモデルデータの解放
 	delete m_model;
-	// 自キャラの開放
+	// 自キャラの解放
 	delete m_player;
-	// デバッグカメラの開放
+	// デバッグカメラの解放
 	delete m_debugCamera;
-	// 衝突マネージャーの開放
+	// 衝突マネージャーの解放
 	delete m_collisionManager;
-	// 敵クラスの開放
+	// 天球の解放
+	delete m_skydome;
+	// 敵クラスの解放
 	for (Enemy* enemy : m_enemys) {
 		delete enemy;
 	}
@@ -38,6 +40,10 @@ void GameScene::Initialize() {
 	m_model = Model::Create();
 	// ビュープロジェクションの初期化
 	m_viewProjection.Initialize();
+	// 天球の作成
+	m_skydome = new Skydome();
+	// 天球の初期化
+	m_skydome->Initialize();
 	// 自キャラの生成
 	m_player = new Player();
 	// 自キャラの初期化
@@ -73,6 +79,9 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	// 天球の更新
+	m_skydome->Update();
 
 	// 自キャラの更新
 	m_player->Update();
@@ -202,6 +211,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	// 天球の描画処理
+	m_skydome->Draw(m_viewProjection);
+
 
 	// 自キャラの描画処理
 	m_player->Draw(m_viewProjection);
