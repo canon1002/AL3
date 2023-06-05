@@ -80,8 +80,8 @@ private: // ・・｡・・ｳ・・・・､・・・ｰ
 	// ・・・・・ｹ・・・・・ｩ・・ｰ
 	bool m_isDead = false;
 	// ・｡・・ｪ・・ｱ・・ｧ(・・ｪ・・・)
-	uint32_t m_collisionAttribute = 0xffffffff;
+	uint32_t m_collisionAttribute = kCollisionAttributeEnemyBullet;
 	// ・｡・・ｪ・・・・・・ｹ・・ｯ(・・ｸ・・・)
-	uint32_t m_collisionMask = 0xffffffff;
+	uint32_t m_collisionMask = kCollisionAttributePlayer + kCollisionAttributePlayerBullet;
 
 };

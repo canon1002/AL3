@@ -80,9 +80,10 @@ private: // メンバ変数
 	// デスフラグ
 	bool m_isDead = false;
 	// 衝突属性(自分)
-	uint32_t m_collisionAttribute = 0xffffffff;
+	uint32_t m_collisionAttribute = kCollisionAttributePlayerBullet;
 	// 衝突マスク(相手)
-	uint32_t m_collisionMask = 0xffffffff;
+	uint32_t m_collisionMask = kCollisionAttributeEnemy + kCollisionAttributeEnemyBullet;
+	
 
 };
 

@@ -202,86 +202,33 @@ void GameScene::Draw() {
 
 void GameScene::CheckAllCollisions() {
 
-	// 判定対象の座標
-	Vector3 posA, posB, posC, posD;
-	float radA, radB, radC, radD;
-	// 弾リストの取得
-	const std::list<PlayerBullet*>& playerBullets = m_player->GetBullets();
-	for (Enemy* enemy : m_enemys) {
-		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
-	}
-	// 座標をセット
-	posA = m_player->GetWorldPos();
-	radA = m_player->GetRadius();
-
-		// コライダー
-	std::list<Collider*> m_colliders;
-
-	// コライダーをリストに登録
-	m_colliders.push_back(m_player);
-	for (Enemy* enemy : m_enemys) {
-		m_colliders.push_back(enemy);
-	}
-
-	// 自弾・敵弾すべて
-	for (PlayerBullet* playerBullet : playerBullets) {
-		m_colliders.push_back(playerBullet);
-	}
-	for (Enemy* enemy : m_enemys) {
-		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
-		for (EnemyBullet* enemyBullet : enemyBullets) {
-			m_colliders.push_back(enemyBullet);
-		}
-	}
-	for (Enemy* enemy : m_enemys) {
-		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
-
-		// プレイヤーと敵の当たり判定
-		CheckCollisionPair(m_player, enemy);
-
-		for (PlayerBullet* playerBullet : playerBullets) {
-			// 敵とプレイヤーの弾の当たり判定
-			CheckCollisionPair(playerBullet, enemy);
-
-			// 敵の弾とプレイヤーの弾の当たり判定
-			for (EnemyBullet* enemyBullet : enemyBullets) {
-				CheckCollisionPair(playerBullet, enemyBullet);
-			}
-		}
-
-		// 敵の弾とプレイヤーの当たり判定
-		for (EnemyBullet* enemyBullet : enemyBullets) {
-			CheckCollisionPair(m_player, enemyBullet);
-		}
-	}
-
-	/*
 	// 自弾・敵弾リストの取得
-	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
-	for (Enemy* enemy : m_enemys) {
-		const std::list<EnemyBullet*>& enemyBullets = enemy->GetBullets();
+	const std::list<PlayerBullet*>& playerBullets = m_player->GetBullets();
+	for (Enemy* m_enemy : m_enemys) {
+		const std::list<EnemyBullet*>& enemyBullets = m_enemy->GetBullets();
 	}
 
 	// コライダー
 	std::list<Collider*> m_colliders;
 
 	// コライダーをリストに登録
-	m_colliders.push_back(player);
-	for (Enemy* enemy : m_enemys) {
-		m_colliders.push_back(enemy);
+	m_colliders.push_back(m_player);
+	for (Enemy* m_enemy : m_enemys) {
+		m_colliders.push_back(m_enemy);
 	}
 
 	// 自弾・敵弾すべて
 	for (PlayerBullet* playerBullet : playerBullets) {
 		m_colliders.push_back(playerBullet);
 	}
-
-	for (EnemyBullet* enemyBullet : enemyBullets) {
-		m_colliders.push_back(enemyBullet);
+	for (Enemy* m_enemy : m_enemys) {
+		const std::list<EnemyBullet*>& enemyBullets = m_enemy->GetBullets();
+		for (EnemyBullet* enemyBullet : enemyBullets) {
+			m_colliders.push_back(enemyBullet);
+		}
 	}
-	*/
 
-	/* リスト内のペアを総当たり
+	//リスト内のペアを総当たり
 	std::list<Collider*>::iterator itrA = m_colliders.begin();
 	for (; itrA != m_colliders.end(); ++itrA) {
 
@@ -298,7 +245,7 @@ void GameScene::CheckAllCollisions() {
 			Collider* colliderB = (*itrB);
 
 			// 当たり判定
-			//CheckCollisionPair(colliderA, colliderB);
+			CheckCollisionPair(colliderA, colliderB);
 
 			// イテレーターBはイテレーターAの次の要素から回す
 			std::list<Collider*>::iterator itrC = itrB;
@@ -327,7 +274,7 @@ void GameScene::CheckAllCollisions() {
 			}
 		}
 	}
-	*/
+	
 }
 
 void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {

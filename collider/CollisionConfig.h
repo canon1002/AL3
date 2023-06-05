@@ -2,13 +2,13 @@
 
 #include<cstdint>
 
-// ・・・・・ｬ・・､・・､・・ｼ・・｣・・ｶ
+// プレイヤー陣営
 const uint32_t kCollisionAttributePlayer = 0b1;
-// ・・ｵ・・｣・・ｶ
+// 敵陣営
 const uint32_t kCollisionAttributeEnemy = 0b1 << 1;
-// ・ｱ・・ｧ (・・ｪ・・・・・ｮ・ｼｾ)
+// プレイヤー陣営の弾
 const uint32_t kCollisionAttributePlayerBullet = 0b1 << 2;
-// ・ｱ・・ｧ (・・ｵ・・ｮ・ｼｾ)
+// 敵陣営の弾
 const uint32_t kCollisionAttributeEnemyBullet = 0b1 << 3;
-// ・ｱ・・ｧ (・ｹｲ・ｸ・・・ｯ・・ｽ・ｼｾ)
+// 干渉可能な弾
 const uint32_t kCollisionAttributeHitBullet = 0b1 << 4;

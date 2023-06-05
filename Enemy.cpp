@@ -16,26 +16,18 @@ Enemy::~Enemy() {
 
 }
 
-/// ・・・・・・・・・
+/// 初期化
 void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
 
-	// NULL・・・・・､・・ｳ・・ｿ・・・・・ｧ・・・・・ｯ
+	// NULLであればエラー
 	assert(model);
 
-	// ・・・・・・・・・・・｣・・・・・・・・ｼ・・ｿ・・・・・｡・・ｳ・・・・､・・・ｰ・・ｫ・ｼ・ｴ・
 	m_model = model;
-	// ・・・・・ｯ・・ｹ・・・・・｣・ｪｭ・・ｿ・ｾｼ・・ｿ
 	m_textureHandle = TextureManager::Load("enemySoul.jpg");
-
-	// ・・ｯ・・ｼ・・ｫ・・・・・・・・ｩ・・ｳ・・ｹ・・・・・ｩ・・ｼ・・・・ｮ・・・・・・・・・
 	m_worldTransform.Initialize();
-	// ・ｼ・・・ｰ・・ｧ・・・・・・・・・・・｣・・・・・・・・・・ｺｧ・ｨ・・・・・・ｻ・・・・・・
 	m_worldTransform.translation_ = position;
-
-	// ・ｼ・・・ｰ・・ｧ・・・・・・・・・・・｣・・・・・・ｺｦ・・・・・｡・・ｳ・・・・､・・・ｰ・・ｫ・・ｻ・・・・・・
 	m_vel = velocity;
 
-	// ・・・・ｾ・・・・・ｨｭ・ｮ・
 	SetRadius(0.5f);
 
 }
