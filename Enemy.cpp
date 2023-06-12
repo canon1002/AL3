@@ -54,7 +54,7 @@ void Enemy::Update() {
 		}
 
 		// ・・｢・ｮ・・・ｮ・ｽ・・ｽｮ・・ｧ・・・・・ｧ・・ｼ・・ｺ・ｧｻ・｡・
-		if (m_worldTransform.translation_.z < 0.0f) {
+		if (m_worldTransform.translation_.z < 20.0f) {
 
 			// ・・・ｺｦ・・・・・・・ｨｭ・ｮ・
 			m_vel.x = 0.02f;

@@ -3,7 +3,6 @@
 
 Skydome::Skydome() { }
 
-
 void Skydome::Initialize() {
 
 	// 受け取ったデータをメンバ変数に格納

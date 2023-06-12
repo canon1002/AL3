@@ -13,7 +13,7 @@
 #include "Enemy.h"
 #include "Skydome.h"
 #include "CollisionManager.h"
-#include <memory>
+#include "RailCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -59,6 +59,8 @@ private: // メンバ変数
 	uint32_t m_textureHandle = 0;
 	// 3Dモデルデータ
 	Model* m_model = nullptr;
+	// ワールド座標変換データ
+	WorldTransform m_worldTransform;
 	// ビュープロジェクション
 	ViewProjection m_viewProjection;
 	
@@ -67,6 +69,9 @@ private: // メンバ変数
 	// デバッグカメラ有効
 	bool m_isDebugCameraAction = false;
 	
+	// レールカメラ
+	RailCamera* m_railCamera = new RailCamera;
+
 	// 衝突マネージャー
 	CollisionManager* m_collisionManager = new CollisionManager;
 

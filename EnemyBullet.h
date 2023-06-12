@@ -74,7 +74,7 @@ private: // ・・｡・・ｳ・・・・､・・・ｰ
 	// ・・・ｺｦ
 	Vector3 m_vel;
 	// ・ｯｿ・・ｽ<frm>
-	static const int32_t kLifeTime = 60 * 15;
+	static const int32_t kLifeTime = 60 * 5;
 	// ・・・・・ｹ・・ｿ・・､・・・・・ｼ
 	int32_t m_deathTimer = kLifeTime;
 	// ・・・・・ｹ・・・・・ｩ・・ｰ

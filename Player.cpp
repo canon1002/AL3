@@ -16,7 +16,7 @@ Player::~Player() {
 }
 
 // 初期化
-void Player::Initialize(Model* model,uint32_t textureHandle) {
+void Player::Initialize(Model* model,uint32_t textureHandle,Vector3 worldPos) {
 
 	// NULLポインタチェック
 	assert(model);
@@ -27,6 +27,7 @@ void Player::Initialize(Model* model,uint32_t textureHandle) {
 
 	// ワールド変換の初期化
 	m_worldTransform.Initialize();
+	m_worldTransform.translation_ = worldPos;
 
 	// シングルインスタンスを取得する
 	m_input = Input::GetInstance();
@@ -149,4 +150,7 @@ void Player::Attack() {
 	}
 
 }
+
+// 親子関係を結ぶ
+void Player::SetParent(const WorldTransform* parent) { m_worldTransform.parent_ = parent; }
 

@@ -17,6 +17,8 @@ GameScene::~GameScene() {
 	delete m_player;
 	// デバッグカメラの解放
 	delete m_debugCamera;
+	// レールカメラの解放
+	delete m_railCamera;
 	// 衝突マネージャーの解放
 	delete m_collisionManager;
 	// 天球の解放
@@ -35,11 +37,15 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	// テクスチャ読み込み
-	m_textureHandle = TextureManager::Load("white1x1.png");
+	m_textureHandle = TextureManager::Load("player.png");
 	// 3Dモデルデータの作成
 	m_model = Model::Create();
+	// ワールド座標変換データの初期化
+	m_worldTransform.Initialize();
 	// ビュープロジェクションの初期化
 	m_viewProjection.Initialize();
+	// レールカメラの初期化
+	m_railCamera->Initialize({0, 0, 0}, {0, 0, -100});
 	// 天球の作成
 	m_skydome = new Skydome();
 	// 天球の初期化
@@ -47,7 +53,9 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	m_player = new Player();
 	// 自キャラの初期化
-	m_player->Initialize(m_model, m_textureHandle);
+	m_player->Initialize(m_model, m_textureHandle, {0, 0, 20});
+	// 自キャラとレールカメラの親子関係を結ぶ
+	m_player->SetParent(&m_railCamera->GetWorldTransform());
 	// デバッグカメラの生成
 	m_debugCamera = new DebugCamera(1280, 720);
 	// 軸方向表示の表示を有効にする
@@ -62,7 +70,7 @@ void GameScene::Initialize() {
 	Vector3 velocity(0, 0, kEnemySpeed);
 
 	// 敵の初期座標を設定
-	enemyStartPos = {4.0f, 0.0f, 40.0f};
+	enemyStartPos = {0.0f, 8.0f, 80.0f};
 
 	// 敵を生成し、初期化
 	Enemy* newEnemy = new Enemy();
@@ -79,6 +87,75 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	//
+	// ↓キー入力 ここから
+	//
+
+	// マウスホイールを取得
+	m_player->GetInput()->GetWheel();
+
+
+	if (m_player->GetInput()->GetWheel() > 0) {
+		WorldTransform result;
+		result = m_railCamera->GetWorldTransform();
+		result.translation_.z += 2.0f;
+		m_railCamera->SetWorldTransform(result);
+	}
+	else if(m_player->GetInput()->GetWheel() < 0) {
+		WorldTransform result;
+		result = m_railCamera->GetWorldTransform();
+		result.translation_.z -= 2.0f;
+		m_railCamera->SetWorldTransform(result);
+	}
+
+	// 中ボタン＋トラックでカメラを移動
+	if (m_player->GetInput()->IsPressMouse(2) == true) {
+		if (m_player->GetInput()->GetMouseMove().lX != 0) {
+			WorldTransform result;
+			result = m_railCamera->GetWorldTransform();
+			result.translation_.x -= (m_player->GetInput()->GetMouseMove().lX/10);
+			m_railCamera->SetWorldTransform(result);
+		}
+		if (m_player->GetInput()->GetMouseMove().lY != 0) {
+			WorldTransform result;
+			result = m_railCamera->GetWorldTransform();
+			result.translation_.y += (m_player->GetInput()->GetMouseMove().lY/10);
+			m_railCamera->SetWorldTransform(result);
+		}
+	}
+
+	// 右ボタン＋トラックでカメラを回転
+	if (m_player->GetInput()->IsPressMouse(1) == true) {
+
+		if (m_player->GetInput()->GetMouseMove().lX > 0) {
+			WorldTransform result;
+			result = m_railCamera->GetWorldTransform();
+			result.rotation_.y -= 0.05f;
+			m_railCamera->SetWorldTransform(result);
+		}
+
+		if (m_player->GetInput()->GetMouseMove().lX < 0) {
+			WorldTransform result;
+			result = m_railCamera->GetWorldTransform();
+			result.rotation_.y += 0.05f;
+			m_railCamera->SetWorldTransform(result);
+		}
+	}
+
+	//
+	// ↑キー入力 ここまで
+	//
+
+	// 自動回転
+	//WorldTransform result;
+	//result = m_railCamera->GetWorldTransform();
+	//result.rotation_.y -= 0.005f;
+	//m_railCamera->SetWorldTransform(result);
+
+
+	// レールカメラの更新
+	m_railCamera->Update();
 
 	// 天球の更新
 	m_skydome->Update();
@@ -128,6 +205,8 @@ void GameScene::Update() {
 	/// ↑当たり判定処理　ここまで
 	/// 
 
+	// 行列の更新	
+	m_worldTransform.UpdateMatrix();
 
 	// デバッグカメラの有効化
 	#ifdef _DEBUG
@@ -152,36 +231,13 @@ void GameScene::Update() {
 		m_viewProjection.UpdateMatrix();
 	}
 
-	// 座標を表示(デバッグ)
-
-	// キャラクターの座標を画面表示する処理
-	ImGui::Begin("Position");
-	// 座標を代入
-	m_inputPos3A[0] = m_player->GetWorldPos().x;
-	m_inputPos3A[1] = m_player->GetWorldPos().y;
-	m_inputPos3A[2] = m_player->GetWorldPos().z;
-	ImGui::SliderFloat3("Player", m_inputPos3A, 0.0f, 1.0f);
-	
-	// 座標を代入
-	for (Enemy* enemy : m_enemys) {
-		m_inputPos3B[0] = enemy->GetWorldPos().x;
-		m_inputPos3B[1] = enemy->GetWorldPos().y;
-		m_inputPos3B[2] = enemy->GetWorldPos().z;
-		ImGui::SliderFloat3("Enemy", m_inputPos3B, 0.0f, 1.0f);
-	}
-
-	// 座標を代入
-	for (Enemy* enemy : m_enemys) {
-		for (EnemyBullet* enemyBullet : enemy->GetBullets()) {
-			m_inputPos3C[0] = enemyBullet->GetWorldPos().x;
-			m_inputPos3C[1] = enemyBullet->GetWorldPos().y;
-			m_inputPos3C[2] = enemyBullet->GetWorldPos().z;
-			ImGui::SliderFloat3("Enemy", m_inputPos3B, 0.0f, 1.0f);
-		}
-	}
-
-	ImGui::End();
-
+	// レールカメラの更新
+	m_railCamera->SetViewProjection(m_viewProjection);
+	m_railCamera->Update();
+	m_viewProjection.matView = m_railCamera->GetViewProjection().matView;
+	m_viewProjection.matProjection = m_railCamera->GetViewProjection().matProjection;
+	// ビュープロジェクションの転送
+	m_viewProjection.TransferMatrix();
 
 }
 

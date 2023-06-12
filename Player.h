@@ -12,7 +12,7 @@ public: // メソッド
 	Player();
 	~Player();
 
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 worldPos);
 	void Update();
 	void Draw(ViewProjection viewProjection);
 	
@@ -46,6 +46,15 @@ public: // メソッド
 	virtual void SetCollisionMask(uint32_t collisionMask) override {
 		m_collisionMask = collisionMask;
 	}
+
+	// 入力処理を取得
+	Input* GetInput() { return m_input; }
+
+	/// <summary>
+	/// 親となるワールドトランスフォームをセット
+	/// </summary>
+	/// <param name="parent">親となるワールドトランスフォーム</param>
+	void SetParent(const WorldTransform* parent);
 
 private: // フィールド
 
