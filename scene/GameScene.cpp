@@ -148,10 +148,10 @@ void GameScene::Update() {
 	//
 
 	// 自動回転
-	//WorldTransform result;
-	//result = m_railCamera->GetWorldTransform();
-	//result.rotation_.y -= 0.005f;
-	//m_railCamera->SetWorldTransform(result);
+	WorldTransform result;
+	result = m_railCamera->GetWorldTransform();
+	result.rotation_.y -= 0.005f;
+	m_railCamera->SetWorldTransform(result);
 
 
 	// レールカメラの更新

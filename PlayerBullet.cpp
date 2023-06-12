@@ -38,7 +38,7 @@ void PlayerBullet::Update() {
 
 	// 時間経過でデス
 	if (--m_deathTimer <= 0) {
-		m_isDead = true;
+ 		m_isDead = true;
 	}
 
 	// 座標を移動させる

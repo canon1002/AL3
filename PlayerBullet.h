@@ -74,7 +74,7 @@ private: // メンバ変数
 	// 速度
 	Vector3 m_vel;
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 5;
+	static const int32_t kLifeTime = 60 * 3;
 	// デスタイマー
 	int32_t m_deathTimer = kLifeTime;
 	// デスフラグ

@@ -83,7 +83,7 @@ void Player::Update() {
 	// デスフラグの立った弾を削除
 	m_bullets.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
-			delete bullet;
+	 		delete bullet;
 			return true;
 		}
 		return false;
@@ -143,7 +143,7 @@ void Player::Attack() {
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(m_model, m_worldTransform.translation_, velocity);
+		newBullet->Initialize(m_model, this->GetWorldPos(), velocity);
 
 		// 弾を登録
 		m_bullets.push_back(newBullet);
