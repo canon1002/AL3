@@ -14,6 +14,7 @@
 #include "Skydome.h"
 #include "CollisionManager.h"
 #include "RailCamera.h"
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -46,6 +47,22 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 敵の弾の登録
+	/// </summary>
+	/// <param name="enemyBullet"></param>
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopDate();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -71,7 +88,7 @@ private: // メンバ変数
 	
 	// レールカメラ
 	RailCamera* m_railCamera = new RailCamera;
-
+	
 	// 衝突マネージャー
 	CollisionManager* m_collisionManager = new CollisionManager;
 
@@ -86,8 +103,16 @@ private: // メンバ変数
 	Player* m_player = nullptr;
 	// 敵
 	std::list<Enemy*> m_enemys;
+	// 敵の弾
+	std::list<EnemyBullet*> m_enemyBullets;
 	// 敵の初期座標
 	Vector3 enemyStartPos;
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands;
+	// 待機中フラグ
+	bool m_isWait;
+	//  待機中タイマー
+	int32_t m_waitTime;
 
 	// ImGuiで値を入力する変数
 	float m_inputPos3A[3] = {0, 0, 0};

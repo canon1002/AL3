@@ -1,6 +1,6 @@
 ﻿#include "Player.h"
 #include <assert.h>
-#include "./class/Matrix4.h"
+#include "./class/Matrix4x4Funk.h"
 
 // コンストラクタ
 Player::Player() {}
@@ -135,11 +135,11 @@ void Player::Attack() {
 	if (m_input->TriggerKey(DIK_SPACE)) {
 
 		// 弾の速度を設定
-		const float kBulletSpeed = 1.0f;
+  		const float kBulletSpeed = 0.5f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = Matrix4::Transform(velocity, m_worldTransform.matWorld_);
+		velocity = Matrix4x4Funk::TransformNomal(velocity, m_worldTransform.matWorld_);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();

@@ -8,8 +8,8 @@ void RailCamera::Initialize(Vector3 worldPosition, Vector3 radian) {
 	m_worldTransform.translation_ = worldPosition;
 	m_worldTransform.rotation_ = radian;
 
-	if (m_viewProjection.farZ > 10.0f) {
-		m_viewProjection.farZ = 10.0f;
+	if (m_viewProjection.farZ > 4.0f) {
+		m_viewProjection.farZ = 4.0f;
 	}
 	m_viewProjection.Initialize();
 

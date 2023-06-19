@@ -82,6 +82,11 @@ public:
 	static Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
 	/// <summary>
+	// ベクトル変換
+	/// <summary>
+	static Vector3 TransformNomal(const Vector3& v, const Matrix4x4& m);
+
+	/// <summary>
 	// アフィン行列の作成
 	/// <summary>
 	static Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);

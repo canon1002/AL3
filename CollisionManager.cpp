@@ -31,31 +31,6 @@ void CollisionManager::CheckAllCollisions() {
 			// 当たり判定
 			CheckCollisionPair(colliderA, colliderB);
 
-			// イテレーターBはイテレーターAの次の要素から回す
-			std::list<Collider*>::iterator itrC = itrB;
-			itrC++;
-
-			for (; itrC != m_colliders.end(); ++itrC) {
-
-				// イテレーターからコライダーを取得
-				Collider* colliderC = (*itrC);
-
-				// 当たり判定
-				CheckCollisionPair(colliderB, colliderC);
-
-				// イテレーターBはイテレーターAの次の要素から回す
-				std::list<Collider*>::iterator itrD = itrC;
-				itrD++;
-
-				for (; itrD != m_colliders.end(); ++itrD) {
-
-					// イテレーターからコライダーを取得
-					Collider* colliderD = (*itrD);
-
-					// 当たり判定
-					CheckCollisionPair(colliderC, colliderD);
-				}
-			}
 		}
 	}
 }

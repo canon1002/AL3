@@ -47,7 +47,12 @@ public: // メンバ関数
 	}
 
 	void OnCollision() override { m_isDead = true; }
-	void OnCollision(Collider* collider) override { m_isDead = true; }
+	void OnCollision(Collider* collider) override { 
+		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+		
+		}
+		m_isDead = true; 
+	}
 
 	// 衝突属性(自分)を取得
 	virtual uint32_t GetCollisionAttribute() override { return m_collisionAttribute; }

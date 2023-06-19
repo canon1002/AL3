@@ -211,6 +211,15 @@ Vector3 Matrix4x4Funk::Transform(const Vector3& v, const Matrix4x4& m) {
 	return result;
 }
 
+// ベクトル変換
+Vector3 Matrix4x4Funk::TransformNomal(const Vector3& v, const Matrix4x4& m) {
+	Vector3 result = {};
+	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0];
+	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1];
+	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2];
+	return result;
+}
+
 // アフィン行列の作成
 Matrix4x4 Matrix4x4Funk::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 

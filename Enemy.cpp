@@ -2,22 +2,14 @@
 #include "Player.h"
 #include <assert.h>
 #include "./class/Matrix4.h"
+#include "GameScene.h"
 
-/// ・・ｳ・・ｳ・・ｹ・・・・・ｩ・・ｯ・・ｿ
 Enemy::Enemy() {}
 
-/// ・・・・・ｹ・・・・・ｩ・・ｯ・・ｿ
-Enemy::~Enemy() {
-
-	// ・ｼｾ・・ｯ・・ｩ・・ｹ・・ｮ・・・・・ｾ
-	for (EnemyBullet* bullet : m_bullets) {
-		delete bullet;
-	}
-
-}
+Enemy::~Enemy() {}
 
 /// 初期化
-void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
+void Enemy::Initialize(Model* model, const Vector3& position,const Vector3& velocity) {
 
 	// NULLであればエラー
 	assert(model);
@@ -32,7 +24,7 @@ void Enemy::Initialize(Model* model, const Vector3& position, Vector3& velocity)
 
 }
 
-/// ・・ｴ・・ｰ・・ｦ・・・
+/// 
 void Enemy::Update() {
 
 	switch (m_phase) {
@@ -83,18 +75,10 @@ void Enemy::Update() {
 	//}
 
 	// ・ｼｾ・・ｮ・・ｴ・・ｰ
-	for (EnemyBullet* bullet : m_bullets) {
-		bullet->Update();
-	}
+	
 
 	// ・・・・・ｹ・・・・・ｩ・・ｰ・・ｮ・ｫ・・・｣・・・・ｼｾ・・・・・・・・､
-	m_bullets.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	
 
 	// ・｡・・・・・・・・ｨ・・ｮ・・・ｻ・ｻ｢・・
 	m_worldTransform.UpdateMatrix();
@@ -103,12 +87,6 @@ void Enemy::Update() {
 /// ・・・・・ｻ・・ｦ・・・
 void Enemy::Draw(const ViewProjection& viewProjection) {
 
-	// ・ｼｾ・・ｮ・・・・・ｻ
-	for (EnemyBullet* bullet : m_bullets) {
-		bullet->Draw(viewProjection);
-	}
-
-	// ・・｢・・・・・ｫ・・ｮ・・・・・ｻ
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
 }
 
@@ -121,19 +99,19 @@ void Enemy::Attack() {
 
 	assert(m_player);
 
-	// ・ｼｾ・・ｮ・・・ｺｦ・・・・ｨｭ・ｮ・
+	// 弾の速度を設定
 	const float kBulletSpeed = 0.0005f;
 
-	// ・・・・・ｬ・・､・・､・・ｼ・・ｮ・ｺｧ・ｨ・・・・・・・・ｾ・
+	// プレイヤーのワールド座標系を取得
 	Vector3 m_worldPos = m_player->GetWorldPos();
-	// ・・ｵ・・ｮ・ｺｧ・ｨ・・・・・・・・ｾ・
+	// 敵のワールド座標系を取得
 	Vector3 m_enemyWorldPos = GetWorldPos();
-	// ・ｷｮ・・・・・・・・・・ｾ・
+	// 差分を計算	
 	Vector3 SubPos;
 	SubPos.x = m_worldPos.x - m_enemyWorldPos.x;
 	SubPos.y = m_worldPos.y - m_enemyWorldPos.y;
 	SubPos.z = m_worldPos.z - m_enemyWorldPos.z;
-	// ・・・・・ｯ・・・・・ｫ・・ｮ・ｭ｣・ｦ・・・・
+	// 長さを調整
 	float length = sqrtf((SubPos.x * SubPos.x) + (SubPos.y * SubPos.y) + (SubPos.z * SubPos.z));
 	if (length > 0) {
 		length = 1 / length;
@@ -147,10 +125,10 @@ void Enemy::Attack() {
 	velocity.y = SubPos.y * kBulletSpeed;
 	velocity.z = SubPos.z * kBulletSpeed;
 
-	// ・ｼｾ・・・・・・・・・・・・・・・・・・・・・・・
+	// 敵の弾を生成
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(m_model, m_worldTransform.translation_, velocity);
-
-	// ・ｼｾ・・・・・ｻ・・ｲ
-	m_bullets.push_back(newBullet);
+	
+	// ゲームシーンに登録
+	m_gamesSene->AddEnemyBullet(newBullet);
 }
