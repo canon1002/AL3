@@ -32,6 +32,14 @@ public:
 	static Matrix4x4 Multiply(Matrix4x4 matrix1, Matrix4x4 matrix2);
 
 	/// <summary>
+	/// 行列とベクトルの積を返す関数
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="m"></param>
+	/// <returns></returns>
+	static Vector3 Multiply(const Vector3& v, const Matrix4x4& m);
+
+	/// <summary>
 	/// 逆行列を作成する
 	/// </summary>
 	/// <param name="matrix">4x4の正方行列</param>
@@ -77,32 +85,38 @@ public:
 	static Matrix4x4 MakeRoatateZMatrix(float rad);
 
 	/// <summary>
-	// 座標変換
-	/// <summary>
+	/// 座標変換
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="m"></param>
+	/// <returns></returns>
 	static Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
 	/// <summary>
-	// ベクトル変換
-	/// <summary>
+	/// ベクトル変換
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="m"></param>
+	/// <returns></returns>
 	static Vector3 TransformNomal(const Vector3& v, const Matrix4x4& m);
 
 	/// <summary>
-	// アフィン行列の作成
+	/// アフィン行列の作成
 	/// <summary>
 	static Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
 	/// <summary>
-	// 透視投影行列の作成
+	/// 透視投影行列の作成
 	/// <summary>
 	static Matrix4x4 MakePerspectiveMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 	/// <summary>
-	// 正射影行列の作成
+	/// 正射影行列の作成
 	/// <summary>
 	static Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
 
 	/// <summary>
-	// ビューポート変換行列の作成
+	/// ビューポート変換行列の作成
 	/// <summary>
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 

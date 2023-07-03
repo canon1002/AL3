@@ -157,7 +157,7 @@ void GameScene::Update() {
 	m_skydome->Update();
 
 	// 自キャラの更新
-	m_player->Update();
+	m_player->Update(m_viewProjection);
 
 
 	// 敵発生コマンドの更新を行う
@@ -241,23 +241,17 @@ void GameScene::Update() {
 		// ビュープロジェクションの転送
 		m_viewProjection.TransferMatrix();
 	} else {
-		// ビュープロジェクション行列の更新と転送
-		m_viewProjection.UpdateMatrix();
-	}
-
-	// レールカメラ更新処理
-	if (!m_isDebugCameraAction) {
 		// レールカメラの更新
-		m_railCamera->SetViewProjection(m_viewProjection);
+		// m_railCamera->SetViewProjection(m_viewProjection);
 		m_railCamera->Update();
 		m_viewProjection.matView = m_railCamera->GetViewProjection().matView;
 		m_viewProjection.matProjection = m_railCamera->GetViewProjection().matProjection;
 		// ビュープロジェクションの転送
 		m_viewProjection.TransferMatrix();
-	} else {
-		// ビュープロジェクション行列の更新と転送
-		m_viewProjection.UpdateMatrix();
 	}
+
+	// レールカメラ更新処理
+
 
 	
 }
@@ -316,6 +310,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	m_player->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

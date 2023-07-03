@@ -109,8 +109,11 @@
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="class\Matrix4.cpp" />
     <ClCompile Include="class\Matrix4x4Funk.cpp" />
+    <ClCompile Include="class\MatrixCamera.cpp" />
+    <ClCompile Include="class\Novice.cpp" />
+    <ClCompile Include="class\Vector2Float.cpp" />
+    <ClCompile Include="class\Vector3Funk.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
@@ -145,8 +148,13 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="class\Matrix4.h" />
+    <ClInclude Include="class\MathObject.h" />
+    <ClInclude Include="class\MathTool.h" />
     <ClInclude Include="class\Matrix4x4Funk.h" />
+    <ClInclude Include="class\MatrixCamera.h" />
+    <ClInclude Include="class\Novice.h" />
+    <ClInclude Include="class\Vector2Float.h" />
+    <ClInclude Include="class\Vector3Funk.h" />
     <ClInclude Include="collider\Collider.h" />
     <ClInclude Include="collider\CollisionConfig.h" />
     <ClInclude Include="CollisionManager.h" />

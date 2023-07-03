@@ -32,9 +32,9 @@ public:
 
 private:
 
-	// ・ﾕ・ﾋ・ｮ・ｫ(・ｩ・ｪ)
+	//
 	uint32_t m_collisionAttribute = 0xffffffff;
-	// ・ﾕ・ﾋ・}・X・N(・・・・)
+	// 
 	uint32_t m_collisionMask = 0xffffffff;
 	
 	// ・ｼ・a

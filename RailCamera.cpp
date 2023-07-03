@@ -8,16 +8,16 @@ void RailCamera::Initialize(Vector3 worldPosition, Vector3 radian) {
 	m_worldTransform.translation_ = worldPosition;
 	m_worldTransform.rotation_ = radian;
 
-	if (m_viewProjection.farZ > 4.0f) {
-		m_viewProjection.farZ = 4.0f;
-	}
+	m_viewProjection.farZ = 2000.0f;
 	m_viewProjection.Initialize();
 
 }
 
 void RailCamera::Update() {
 
-	// Z軸方向へ移動する
+	m_worldTransform.translation_.z += 0.1f;
+
+	// ワールド行列の更新
 	m_worldTransform.UpdateMatrix();
 
 	// カメラオブジェクトのワールド座標からビュー行列を計算する

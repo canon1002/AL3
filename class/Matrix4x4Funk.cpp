@@ -54,6 +54,16 @@ Matrix4x4 Matrix4x4Funk::Multiply(Matrix4x4 m1, Matrix4x4 m2) {
 
 }
 
+/// 行列の積を返す関数
+Vector3 Matrix4x4Funk::Multiply(const Vector3& v, const Matrix4x4& m) {
+
+	return Vector3{
+	    (v.x * m.m[0][0]) + (v.y * m.m[1][0]) + (v.z * m.m[2][0]),
+	    (v.x * m.m[0][1]) + (v.y * m.m[1][1]) + (v.z * m.m[2][1]),
+	    (v.x * m.m[0][2]) + (v.y * m.m[1][2]) + (v.z * m.m[2][2]),
+	};
+}
+
 /// 逆行列を作成する
 Matrix4x4 Matrix4x4Funk::Inverse(Matrix4x4 m) {
 

@@ -1,5 +1,6 @@
 #pragma once
 
+// エンジンコード インクルード
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -8,13 +9,16 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
 #include "DebugCamera.h"
+#include <sstream>
+
+// 自作コード インクルード
+#include "Player.h"
 #include "Enemy.h"
 #include "Skydome.h"
 #include "CollisionManager.h"
 #include "RailCamera.h"
-#include <sstream>
+#include"./class/MatrixCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -63,6 +67,10 @@ public: // メンバ関数
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
+	WorldTransform GetWorldTransfome() { return m_worldTransform; }
+	MatrixCamera* GetMatrixCamera() { return m_matrixCamera; }
+
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -91,6 +99,10 @@ private: // メンバ変数
 	
 	// 衝突マネージャー
 	CollisionManager* m_collisionManager = new CollisionManager;
+
+	// カメラ行列
+	MatrixCamera* m_matrixCamera = new MatrixCamera({1280, 720}); 
+
 
 	/// <summary>
 	/// オブジェクト

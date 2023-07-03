@@ -1,21 +1,23 @@
 ﻿#pragma once
-#include "Model.h"
-#include "WorldTransform.h"
-#include "Input.h"
-#include "PlayerBullet.h"
-#include <list>
 #include "./collider/Collider.h"
+#include "Input.h"
+#include "Model.h"
+#include "PlayerBullet.h"
+#include "Sprite.h"
+#include "WorldTransform.h"
+#include <list>
 
-class Player : public Collider 
-{
+class GameScene;
+
+class Player : public Collider {
 public: // メソッド
 	Player();
 	~Player();
 
 	void Initialize(Model* model, uint32_t textureHandle, Vector3 worldPos);
-	void Update();
-	void Draw(ViewProjection viewProjection);
-	
+	void Update(const ViewProjection& viewProjection);
+	void Draw(const ViewProjection& viewProjection) const;
+
 	// 旋回(回転)
 	void Rotate();
 	// 攻撃
@@ -23,16 +25,24 @@ public: // メソッド
 	// 弾リストの取得
 	const std::list<PlayerBullet*>& GetBullets() { return m_bullets; }
 	// ワールド座標を取得
-	Vector3 GetWorldPos()override{
+	Vector3 GetWorldPos() override {
 		Vector3 result = {};
 		result.x = m_worldTransform.matWorld_.m[3][0];
 		result.y = m_worldTransform.matWorld_.m[3][1];
 		result.z = m_worldTransform.matWorld_.m[3][2];
 		return result;
 	}
+	// ワールド座標を取得
+	Vector3 GetWorldPos3DReticle() {
+		Vector3 result = {};
+		result.x = m_worldTransform3DReticle.matWorld_.m[3][0];
+		result.y = m_worldTransform3DReticle.matWorld_.m[3][1];
+		result.z = m_worldTransform3DReticle.matWorld_.m[3][2];
+		return result;
+	}
 
-	void OnCollision()override {}
-	void OnCollision(Collider* collider) override { }
+	void OnCollision() override {}
+	void OnCollision(Collider* collider) override {}
 
 	// 衝突属性(自分)を取得
 	virtual uint32_t GetCollisionAttribute() override { return m_collisionAttribute; }
@@ -56,8 +66,18 @@ public: // メソッド
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
 
-private: // フィールド
+	void SetGameScene(GameScene* gs) { m_gameScene = gs; }
 
+#pragma region レティクル
+
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	void DrawUI() const;
+
+#pragma endregion
+
+private: // フィールド
 	// ワールド変換データ
 	WorldTransform m_worldTransform;
 	// モデル
@@ -77,7 +97,16 @@ private: // フィールド
 	// キーボード入力
 	Input* m_input = nullptr;
 
+	// ゲームシーン
+	GameScene* m_gameScene;
 
-	
+#pragma region レティクル
 
+	// 3Dレティクル用ワールド変換データ
+	WorldTransform m_worldTransform3DReticle;
+
+	// 2Dレティクル用スプライト
+	Sprite* m_sprite2DReticle = nullptr;
+
+#pragma endregion
 };
