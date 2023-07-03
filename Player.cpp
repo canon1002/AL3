@@ -172,7 +172,7 @@ void Player::Draw(const ViewProjection& viewProjection) const {
 	m_model->Draw(m_worldTransform, viewProjection, m_textureHandle);
 
 	// 3Dレティクルを描画
-	m_model->Draw(m_worldTransform3DReticle, viewProjection, m_textureHandle);
+	//m_model->Draw(m_worldTransform3DReticle, viewProjection, m_textureHandle);
 }
 
 // 旋回(回転)
