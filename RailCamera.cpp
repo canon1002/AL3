@@ -15,8 +15,6 @@ void RailCamera::Initialize(Vector3 worldPosition, Vector3 radian) {
 
 void RailCamera::Update() {
 
-	m_worldTransform.translation_.z += 0.1f;
-
 	// ワールド行列の更新
 	m_worldTransform.UpdateMatrix();
 

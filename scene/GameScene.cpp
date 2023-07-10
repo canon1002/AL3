@@ -157,7 +157,7 @@ void GameScene::Update() {
 	m_skydome->Update();
 
 	// 自キャラの更新
-	m_player->Update(m_viewProjection);
+	m_player->Update(m_railCamera->GetViewProjection());
 
 
 	// 敵発生コマンドの更新を行う

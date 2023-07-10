@@ -70,7 +70,6 @@ public: // メンバ関数
 	WorldTransform GetWorldTransfome() { return m_worldTransform; }
 	MatrixCamera* GetMatrixCamera() { return m_matrixCamera; }
 
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
