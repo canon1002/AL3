@@ -2,8 +2,8 @@
 #include "./class/Matrix4x4Funk.h"
 #include "GameScene.h"
 #include "class/MathTool.h"
-#include <assert.h>
 #include <ImGui.h>
+#include <assert.h>
 
 // コンストラクタ
 Player::Player() {}
@@ -57,17 +57,36 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 worldPos) 
 // 更新
 void Player::Update(const ViewProjection& viewProjection) {
 
-	POINT mousePosition;
-	GetCursorPos(&mousePosition);
-	HWND hwnd = WinApp::GetInstance()->GetHwnd();
-	ScreenToClient(hwnd, &mousePosition);
-
-	/// キーボードによる移動処理
+	/// 移動処理
 
 	// キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 	// キャラクターの移動速さ
 	const float kCharacterSpeed = 0.2f;
+	// 2Dレティクルの座標
+	static Vector2 spritePosition = {0, 0};
+
+	// マウスカーソルの情報を習得
+	POINT mousePosition;
+	GetCursorPos(&mousePosition);
+	HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	ScreenToClient(hwnd, &mousePosition);
+
+	// ゲームパッドの情報を取得
+	XINPUT_STATE joyState;
+
+	// ゲームパッドの移動操作(左スティック)
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x += ((float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed);
+		move.y += ((float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed);
+	}
+
+	// ゲームパッドのレティクル操作(右スティック)
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		spritePosition.x += ((float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f);
+		spritePosition.y -= ((float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f);
+	}
+	m_sprite2DReticle->SetPosition({spritePosition.x, spritePosition.y});
 
 	// 旋回処理
 	Rotate();
@@ -148,62 +167,69 @@ void Player::Update(const ViewProjection& viewProjection) {
 #pragma region 2D->3D
 
 	// マウス座標をレティクルの座標に代入
-	m_sprite2DReticle->SetPosition({(float)mousePosition.x, (float)mousePosition.y});
+	// m_sprite2DReticle->SetPosition({(float)mousePosition.x, (float)mousePosition.y});
 
 	const static Matrix4x4 viewport = Matrix4x4Funk::MakeViewportMatrix(
 	    0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0.0f, 1.0f);
 
 	// 先に行列を合成する(逆行列化→合成はNG)
-	Matrix4x4 VPV = Matrix4x4Funk::Multiply(Matrix4x4Funk::Multiply(viewProjection.matView, viewProjection.matProjection), viewport);
+	Matrix4x4 VPV = Matrix4x4Funk::Multiply(
+	    Matrix4x4Funk::Multiply(viewProjection.matView, viewProjection.matProjection), viewport);
 	// 逆行列化
 	Matrix4x4 inVPV = Matrix4x4Funk::Inverse(VPV);
 
 	Vector3 posNear = {
-		m_sprite2DReticle->GetPosition().x, m_sprite2DReticle->GetPosition().y, 0.0f};
-	Vector3 posFar = {
-	    m_sprite2DReticle->GetPosition().x, m_sprite2DReticle->GetPosition().y, 1.0f};
+	    m_sprite2DReticle->GetPosition().x, m_sprite2DReticle->GetPosition().y, 0.0f};
+	Vector3 posFar = {m_sprite2DReticle->GetPosition().x, m_sprite2DReticle->GetPosition().y, 1.0f};
 	posNear = Matrix4x4Funk::Transform(posNear, inVPV);
 	posFar = Matrix4x4Funk::Transform(posFar, inVPV);
 
 	Vector3 mouseDirction = Subtract(posFar, posNear);
 
 	// 自機から3Dレティクルへの距離
-	 const float kDistanceTestObject = 50.0f;
+	const float kDistanceTestObject = 50.0f;
 
 	// ベクトルの長さを整える
-	 mouseDirction = Nomalize(mouseDirction);
-	 mouseDirction.x *= kDistanceTestObject;
-	 mouseDirction.y *= kDistanceTestObject;
-	 mouseDirction.z *= kDistanceTestObject;
+	mouseDirction = Nomalize(mouseDirction);
+	mouseDirction.x *= kDistanceTestObject;
+	mouseDirction.y *= kDistanceTestObject;
+	mouseDirction.z *= kDistanceTestObject;
 	// 3Dレティクルの座標を設定
-	 m_worldTransform3DReticle.translation_ = Add(posNear, mouseDirction);
+	m_worldTransform3DReticle.translation_ = Add(posNear, mouseDirction);
 
-	 ImGui::Begin("Player");
-	 ImGui::Text("2DReticle:(%f,%f)", m_sprite2DReticle->GetPosition().x, m_sprite2DReticle->GetPosition().y);
-	 ImGui::Text("Near:(%+.2f,%+.2f,%+.2f)", posNear.x, posNear.y, posNear.z);
-	 ImGui::Text("Far:(%+.2f,%+.2f,%+.2f)", posFar.x, posFar.y, posFar.z);
-	 ImGui::Text(
-	     "3DReticle:(%+.2f,%+.2f,%+.2f)", m_worldTransform3DReticle.translation_.x,
-	     m_worldTransform3DReticle.translation_.y, m_worldTransform3DReticle.translation_.z);
-	 ImGui::End();
-
+	ImGui::Begin("Player");
+	ImGui::Text(
+	    "2DReticle:(%f,%f)", m_sprite2DReticle->GetPosition().x,
+	    m_sprite2DReticle->GetPosition().y);
+	ImGui::Text("Near:(%+.2f,%+.2f,%+.2f)", posNear.x, posNear.y, posNear.z);
+	ImGui::Text("Far:(%+.2f,%+.2f,%+.2f)", posFar.x, posFar.y, posFar.z);
+	ImGui::Text(
+	    "3DReticle:(%+.2f,%+.2f,%+.2f)", m_worldTransform3DReticle.translation_.x,
+	    m_worldTransform3DReticle.translation_.y, m_worldTransform3DReticle.translation_.z);
+	ImGui::End();
 
 #pragma endregion
-
 
 	// 3Dレティクルの座標を更新転送
 	m_worldTransform3DReticle.UpdateMatrix();
 
 	// キャラクターの攻撃処理
-	Attack();
+
+	// Rトリガーを押していたら攻撃処理を行う
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) 
+	{
+		Attack();
+	}
 
 	// 弾の更新
-	for (PlayerBullet* bullet : m_bullets) {
+	for (PlayerBullet* bullet : m_bullets)
+	{
 		bullet->Update();
 	}
 
 	// デスフラグの立った弾を削除
-	m_bullets.remove_if([](PlayerBullet* bullet) {
+	m_bullets.remove_if([](PlayerBullet* bullet)
+	{
 		if (bullet->IsDead()) {
 			delete bullet;
 			return true;
@@ -241,38 +267,33 @@ void Player::Rotate() {
 }
 
 // 攻撃
-void Player::Attack() {
+void Player::Attack() 
+{
 
-	// 発射キーをトリガーしたら
-	if (m_input->TriggerKey(DIK_SPACE)) {
+	// 弾の速度を設定
+	const float kBulletSpeed = 0.5f;
 
-		// 弾の速度を設定
-		const float kBulletSpeed = 0.5f;
+	// 差分を計算
+	Vector3 SubPos{0, 0, 0};
+	SubPos = Subtract(GetWorldPos3DReticle(), GetWorldPos());
+	// 長さを調整
+	SubPos = Nomalize(SubPos);
 
-		// 差分を計算
-		Vector3 SubPos{0, 0, 0};
-		SubPos = Subtract(GetWorldPos3DReticle(), GetWorldPos());
-		// 長さを調整
-		SubPos = Nomalize(SubPos);
+	Vector3 velocity{0, 0, 0};
+	velocity.x = SubPos.x * kBulletSpeed;
+	velocity.y = SubPos.y * kBulletSpeed;
+	velocity.z = SubPos.z * kBulletSpeed;
 
-		Vector3 velocity{0, 0, 0};
-		velocity.x = SubPos.x * kBulletSpeed;
-		velocity.y = SubPos.y * kBulletSpeed;
-		velocity.z = SubPos.z * kBulletSpeed;
+	// 弾を生成し、初期化
+	PlayerBullet* newBullet = new PlayerBullet();
+	newBullet->Initialize(m_model, this->GetWorldPos(), velocity);
 
-		// 弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(m_model, this->GetWorldPos(), velocity);
+	// 弾を登録
+	m_bullets.push_back(newBullet);
 
-		// 弾を登録
-		m_bullets.push_back(newBullet);
-	}
 }
 
 // 親子関係を結ぶ
 void Player::SetParent(const WorldTransform* parent) { m_worldTransform.parent_ = parent; }
 
-void Player::DrawUI() const 
-{ 
-	m_sprite2DReticle->Draw();
-}
+void Player::DrawUI() const { m_sprite2DReticle->Draw(); }
