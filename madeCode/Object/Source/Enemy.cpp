@@ -1,7 +1,7 @@
-﻿#include "Enemy.h"
-#include "Player.h"
+﻿#include "madeCode/Object/Heder/Enemy.h"
+#include "madeCode/Object/Heder/Player.h"
 #include <assert.h>
-#include "./class/Matrix4x4Funk.h"
+#include "madeCode/Math/Heder//Matrix4x4Funk.h"
 #include "GameScene.h"
 
 Enemy::Enemy() {}

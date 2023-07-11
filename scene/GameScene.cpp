@@ -1,11 +1,11 @@
 #include "GameScene.h"
-#include "./class/Matrix4x4Funk.h"
-#include "./collider/Collider.h"
+#include "madeCode/Math/Heder/Matrix4x4Funk.h"
+#include "madeCode/Setting/Heder/Collider.h"
 #include "AxisIndicator.h"
 #include "ImGuiManager.h"
 #include "TextureManager.h"
 #include <cassert>
-#include<fstream>
+#include <fstream>
 
 GameScene::GameScene() {}
 

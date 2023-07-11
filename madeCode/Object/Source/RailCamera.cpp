@@ -1,5 +1,5 @@
-#include "RailCamera.h"
-#include "./class/Matrix4x4Funk.h"
+#include "madeCode/Object/Heder/RailCamera.h"
+#include "madeCode/Math/Heder/Matrix4x4Funk.h"
 #include "imguiManager.h"
 
 void RailCamera::Initialize(Vector3 worldPosition, Vector3 radian) {

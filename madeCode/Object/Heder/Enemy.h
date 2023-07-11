@@ -3,7 +3,7 @@
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
 #include <list>
-#include "./collider/Collider.h"
+#include "madeCode/Setting/Heder/Collider.h"
 
 // ゲームシーンクラスを前方宣言
 class GameScene;

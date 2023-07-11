@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
-#include "./collider/Collider.h"
+#include "madeCode/Setting/Heder/Collider.h"
 
 /// <summary>
 /// 自キャラの弾

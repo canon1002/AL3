@@ -13,12 +13,12 @@
 #include <sstream>
 
 // 自作コード インクルード
-#include "Player.h"
-#include "Enemy.h"
-#include "Skydome.h"
-#include "CollisionManager.h"
-#include "RailCamera.h"
-#include"./class/MatrixCamera.h"
+#include "madeCode/Object/Heder/Player.h"
+#include "madeCode/Object/Heder/Enemy.h"
+#include "madeCode/Object/Heder/Skydome.h"
+#include "madeCode/Object/Heder/RailCamera.h"
+#include "madeCode/Setting/Heder/CollisionManager.h"
+#include "madeCode/Math/Heder/MatrixCamera.h"
 
 /// <summary>
 /// ゲームシーン

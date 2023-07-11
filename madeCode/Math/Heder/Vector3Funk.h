@@ -1,12 +1,12 @@
 #pragma once
 #include<Vector3.h>
 #include<cmath>
-//#include<Novice.h>
+#include"madeCode/Novice/Novice.h"
 
 
 class Vector3Funk
 {
-public: //ƒƒ“ƒoŠÖ”(ƒƒ\ƒbƒh)
+public: //ãƒ¡ãƒ³ãƒé–¢æ•°(ãƒ¡ã‚½ãƒƒãƒ‰)
 
 	
 
@@ -15,7 +15,7 @@ public: //ƒƒ“ƒoŠÖ”(ƒƒ\ƒbƒh)
 	
 
 	/// <summary>
-	/// ŽOŽŸŒ³s—ñ‚Ì•\Ž¦
+	/// ä¸‰æ¬¡å…ƒè¡Œåˆ—ã®è¡¨ç¤º
 	/// </summary>
 	/// <param name="posX"></param>
 	/// <param name="posY"></param>
@@ -23,7 +23,7 @@ public: //ƒƒ“ƒoŠÖ”(ƒƒ\ƒbƒh)
 	/// <param name="ravel"></param>
 	static void VectorScreenPrintf(int posX, int posY, const Vector3& v1,const char* ravel) 
 	{
-		//Novice::ScreenPrintf(posX, posY, "%s : %.2f,%.2f,%.2f,", ravel, v1.x, v1.y, v1.z);
+		Novice::ScreenPrintf(posX, posY, "%s : %.2f,%.2f,%.2f,", ravel, v1.x, v1.y, v1.z);
 	}
 
 

@@ -1,11 +1,13 @@
 #pragma once
 
+// 自作コードのインクルード
+#include"madeCode/Math/Heder/MathTool.h"
+
+// エンジンコードなどのインクルード
 #define _USE_MATH_DEFINES
 #include<cmath>
-#include<Vector2.h>
-#include<Vector3.h>
-#include"class/MathObject.h"
-#include"class/Novice.h"
+#include"madeCode/Novice/Novice.h"
+
 
 #pragma region 共通
 
@@ -16,9 +18,9 @@
 /// <param name="max"></param>
 /// <param name="min"></param>
 /// <returns></returns>
-float clamp(float num, float max, float min) 
+float clamp(float num, float max, float min)
 {
-	if (num > max) 
+	if (num > max)
 	{
 		return max;
 	}
@@ -42,7 +44,7 @@ float clamp(float num, float max, float min)
 /// </summary>
 /// <param name="v"></param>
 /// <returns></returns>
-static float Length(const Vector2& v) {
+float Length(const Vector2& v) {
 	float result;
 	result = sqrt(v.x * v.x + v.y * v.y);
 	return result;
@@ -53,7 +55,7 @@ static float Length(const Vector2& v) {
 /// </summary>
 /// <param name="v"></param>
 /// <returns></returns>
-Vector2 Nomalize(const Vector2& v) 
+Vector2 Nomalize(const Vector2& v)
 {
 	Vector2 result;
 	result.x = v.x / Length(v);
@@ -82,7 +84,7 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2)
 	Vector3 result;
 	result.x = v1.x - v2.x;
 	result.y = v1.y - v2.y;
-	result.z= v1.z - v2.z;
+	result.z = v1.z - v2.z;
 	return result;
 }
 
@@ -101,7 +103,7 @@ Vector3 Scalar(float scalar, const Vector3& v)
 /// </summary>
 /// <param name="v"></param>
 /// <returns></returns>
-static float Length(const Vector3& v) {
+float Length(const Vector3& v) {
 	float result;
 	result = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 	return result;
@@ -128,13 +130,15 @@ Vector3 Nomalize(const Vector3& v)
 /// <param name="v1"></param>
 /// <param name="v2"></param>
 /// <returns></returns>
-static Vector3 Cross(const Vector3& v1, const Vector3& v2)
+Vector3 Cross(const Vector3& v1, const Vector3& v2)
 {
-	return Vector3{
+	Vector3 result = {
 		(v1.y * v2.z) - (v1.z * v2.y),
 		(v1.z * v2.x) - (v1.x * v2.z),
 		(v1.x * v2.y) - (v1.y * v2.x)
 	};
+
+	return result;
 };
 
 /// <summary>
@@ -143,7 +147,7 @@ static Vector3 Cross(const Vector3& v1, const Vector3& v2)
 /// <param name="v1"></param>
 /// <param name="v2"></param>
 /// <returns></returns>
-static float Dot(const Vector3& v1, const Vector3& v2)
+float Dot(const Vector3& v1, const Vector3& v2)
 {
 	return float{ v1.x * v2.x + v1.y * v2.y + v1.z * v2.z };
 };
@@ -154,9 +158,11 @@ static float Dot(const Vector3& v1, const Vector3& v2)
 /// <param name="v1"></param>
 /// <param name="v2"></param>
 /// <returns></returns>
-static Vector3 Project(const Vector3& v1, const Vector3& v2)
+Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
-	return Scalar(Dot(v1, Nomalize(v2)), Nomalize(v2));
+	Vector3 result = Scalar(Dot(v1, Nomalize(v2)), Nomalize(v2));
+
+	return result;
 }
 
 /// <summary>
@@ -165,19 +171,47 @@ static Vector3 Project(const Vector3& v1, const Vector3& v2)
 /// <param name="point"></param>
 /// <param name="segment"></param>
 /// <returns></returns>
-static Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 {
 	float t = Dot(Subtract(point, segment.origin), segment.diff) / pow(Length(segment.diff), 2.0f);
 	t = clamp(t, 1.0f, 0.0f);
 
-	return Add(segment.origin, Scalar(t, segment.diff));
+	Vector3 result = Add(segment.origin, Scalar(t, segment.diff));
+	return result; 
 }
 
-/// <summary>
+Vector3 Perpendicular(const Vector3& v) {
+	if (v.x != 0 || v.y != 0) {
+		return { -v.y,v.x,0.0f };
+	}
+
+	return{ 0.0f,-v.z,v.y };
+}
+
+#pragma region 衝突判定関数
+
+bool isCollision(const Sphere& s1, const Sphere& s2) {
+
+	// 2つの球体の中心点間の距離を求める
+	float distance = Length(Subtract(s2.center, s1.center));
+
+	// 半径の合計よりも短ければ衝突
+	if (distance <= (s1.radius + s2.radius)) 
+	{
+		return true;
+	}
+
+	return false;
+
+}
+
+#pragma endregion
+
+
+#pragma region 描画関数
+
+
 /// グリッド線を表示する関数
-/// </summary>
-/// <param name="viewProjection"></param>
-/// <param name="viewport"></param>
 void DrawGrid(const Matrix4x4& viewProjection, const Matrix4x4& viewport) {
 	const float kGridHalfWidth = 2.0f;
 	const uint32_t kSubdivision = 10;
@@ -195,13 +229,13 @@ void DrawGrid(const Matrix4x4& viewProjection, const Matrix4x4& viewport) {
 		/// ローカル座標系をセット
 
 		// 横線
-		localWidthVer[0] = {-kGridHalfWidth, 0.0f, kGridEvery * (float(xIndex) - 5)};
-		localWidthVer[1] = {kGridHalfWidth, 0.0f, kGridEvery * (float(xIndex) - 5)};
+		localWidthVer[0] = { -kGridHalfWidth, 0.0f, kGridEvery * (float(xIndex) - 5) };
+		localWidthVer[1] = { kGridHalfWidth, 0.0f, kGridEvery * (float(xIndex) - 5) };
 		// 縦線
-		localHeightVer[0] = {kGridEvery * (float(xIndex) - 5), 0.0f, -kGridHalfWidth};
-		localHeightVer[1] = {kGridEvery * (float(xIndex) - 5), 0.0f, kGridHalfWidth};
+		localHeightVer[0] = { kGridEvery * (float(xIndex) - 5), 0.0f, -kGridHalfWidth };
+		localHeightVer[1] = { kGridEvery * (float(xIndex) - 5), 0.0f, kGridHalfWidth };
 
-		//
+		// ndcに変換
 		Vector3 ndcWidthStart = Matrix4x4Funk::Transform(localWidthVer[0], viewProjection);
 		Vector3 ndcWidthEnd = Matrix4x4Funk::Transform(localWidthVer[1], viewProjection);
 		Vector3 ndcHeightStart = Matrix4x4Funk::Transform(localHeightVer[0], viewProjection);
@@ -218,27 +252,27 @@ void DrawGrid(const Matrix4x4& viewProjection, const Matrix4x4& viewport) {
 		// 変換した座標を使って表示。色は薄い灰色(0xAAAAAAFF)原点は黒ぐらいが良い
 
 		Novice::DrawLine(
-		    int(screenWidthVer[0].x), int(screenWidthVer[0].y), int(screenWidthVer[1].x),
-		    int(screenWidthVer[1].y), 0xAAAAAAFF);
+			int(screenWidthVer[0].x), int(screenWidthVer[0].y), int(screenWidthVer[1].x),
+			int(screenWidthVer[1].y), 0xAAAAAAFF);
 		Novice::DrawLine(
-		    int(screenHeightVer[0].x), int(screenHeightVer[0].y), int(screenHeightVer[1].x),
-		    int(screenHeightVer[1].y), 0xAAAAAAFF);
+			int(screenHeightVer[0].x), int(screenHeightVer[0].y), int(screenHeightVer[1].x),
+			int(screenHeightVer[1].y), 0xAAAAAAFF);
 
 		//
 		if (localWidthVer[0].z == 0) {
 			Novice::DrawLine(
-			    int(screenWidthVer[0].x), int(screenWidthVer[0].y), int(screenWidthVer[1].x),
-			    int(screenWidthVer[1].y), 0x000000FF);
+				int(screenWidthVer[0].x), int(screenWidthVer[0].y), int(screenWidthVer[1].x),
+				int(screenWidthVer[1].y), 0x000000FF);
 			Novice::DrawLine(
-			    int(screenHeightVer[0].x), int(screenHeightVer[0].y), int(screenHeightVer[1].x),
-			    int(screenHeightVer[1].y), 0x000000FF);
+				int(screenHeightVer[0].x), int(screenHeightVer[0].y), int(screenHeightVer[1].x),
+				int(screenHeightVer[1].y), 0x000000FF);
 		}
 	}
 }
 
-void DrawSphere(
-    const Sphere& sphere, const Matrix4x4& viewProjection, const Matrix4x4& viewport,
-    uint32_t color) {
+/// 球体を描画する
+void DrawSphere(const Sphere& sphere, 
+	const Matrix4x4& viewProjection,const Matrix4x4& viewport,uint32_t color) {
 	float pi = 3.14f;
 	const uint32_t kSubdivision = 24;
 	const float kLonEvery = (2 * pi) / kSubdivision;
@@ -253,16 +287,16 @@ void DrawSphere(
 			float lon = lonIndex * kLonEvery; //	現在の経度を求める
 
 			Vector3 a = {
-			    cos(lat) * cos(lon) * sphere.radius, sin(lat) * sphere.radius,
-			    cos(lat) * sin(lon) * sphere.radius};
+				cos(lat) * cos(lon) * sphere.radius, sin(lat) * sphere.radius,
+				cos(lat) * sin(lon) * sphere.radius };
 			Vector3 b = {
-			    cos(lat + (pi / kSubdivision)) * cos(lon) * sphere.radius,
-			    sin(lat + (pi / kSubdivision)) * sphere.radius,
-			    cos(lat + (pi / kSubdivision)) * sin(lon) * sphere.radius};
+				cos(lat + (pi / kSubdivision)) * cos(lon) * sphere.radius,
+				sin(lat + (pi / kSubdivision)) * sphere.radius,
+				cos(lat + (pi / kSubdivision)) * sin(lon) * sphere.radius };
 			Vector3 c = {
-			    cos(lat) * cos(lon + ((pi * 2) / kSubdivision)) * sphere.radius,
-			    sin(lat) * sphere.radius,
-			    cos(lat) * sin(lon + ((pi * 2) / kSubdivision)) * sphere.radius};
+				cos(lat) * cos(lon + ((pi * 2) / kSubdivision)) * sphere.radius,
+				sin(lat) * sphere.radius,
+				cos(lat) * sin(lon + ((pi * 2) / kSubdivision)) * sphere.radius };
 
 			// 球体の座標分移動させる
 			a.x += sphere.center.x;
@@ -284,14 +318,50 @@ void DrawSphere(
 			c = Matrix4x4Funk::Transform(c, viewport);
 
 			// ab,bcで線を引く
-			Novice::DrawLine(a.x, a.y, b.x, b.y, color);
-			Novice::DrawLine(a.x, a.y, c.x, c.y, color);
+			Novice::DrawLine(int(a.x), int(a.y), int(b.x), int(b.y), color);
+			Novice::DrawLine(int(a.x), int(a.y), int(c.x), int(c.y), color);
 		}
 	}
 }
 
+void DrawPlane(const Plane& plane,
+	const Matrix4x4& viewProjection, const Matrix4x4& viewport, uint32_t color) {
 
+	// <4頂点は以下の通りに求める>
+	
+	// 1.中心点を決める
+	// 2.法線と垂直なベクトルを1つ求める
+	// 3.2の逆ベクトルを求める
+	// 4.2の法線とのクロス積を求める
+	// 5.4の逆ベクトルを求める
+	// 6.2~5のベクトルを中心点にそれぞれ定数倍してたスト4頂点が出来上がる
+
+	Vector3 center = Scalar(plane.distance, plane.normal);		// 1
+	Vector3 perpendiculars[4];
+	perpendiculars[0] = Nomalize(Perpendicular(plane.normal));	// 2
+	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };	// 3
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);	// 4
+	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,-perpendiculars[2].z };	// 5
+	// 6
+	Vector3 points[4];
+	for (int32_t index = 0; index < 4; index++) {
+		Vector3 extend = Scalar(2.0f, perpendiculars[index]);
+		Vector3 point = Add(center, extend);
+		points[index] = Matrix4x4Funk::Transform(Matrix4x4Funk::Transform(point, viewProjection), viewport);
+	}
+
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color);
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[2].x, (int)points[2].y, color);
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color);
+
+	Novice::DrawEllipse((int)points[0].x, (int)points[0].y, 8, 8, 0.0f, 0xFF0000FF, kFillModeSolid);
+	Novice::DrawEllipse((int)points[1].x, (int)points[1].y, 8, 8, 0.0f, 0x00FF00FF, kFillModeSolid);
+	Novice::DrawEllipse((int)points[2].x, (int)points[2].y, 8, 8, 0.0f, 0x0000FFFF, kFillModeSolid);
+	Novice::DrawEllipse((int)points[3].x, (int)points[3].y, 8, 8, 0.0f, 0xFF00FFFF, kFillModeSolid);
+
+}
 
 #pragma endregion
 
-
+#pragma endregion

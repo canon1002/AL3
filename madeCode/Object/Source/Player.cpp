@@ -1,7 +1,7 @@
-﻿#include "Player.h"
-#include "./class/Matrix4x4Funk.h"
+﻿#include "madeCode/Object/Heder/Player.h"
+#include "madeCode/Math/Heder/Matrix4x4Funk.h"
 #include "GameScene.h"
-#include "class/MathTool.h"
+#include "madeCode/Math/Heder/MathTool.h"
 #include <ImGui.h>
 #include <assert.h>
 
@@ -64,7 +64,7 @@ void Player::Update(const ViewProjection& viewProjection) {
 	// キャラクターの移動速さ
 	const float kCharacterSpeed = 0.2f;
 	// 2Dレティクルの座標
-	static Vector2 spritePosition = {0, 0};
+	static Vector2 spritePosition = {640, 360};
 
 	// マウスカーソルの情報を習得
 	POINT mousePosition;
@@ -187,7 +187,7 @@ void Player::Update(const ViewProjection& viewProjection) {
 	Vector3 mouseDirction = Subtract(posFar, posNear);
 
 	// 自機から3Dレティクルへの距離
-	const float kDistanceTestObject = 50.0f;
+	const float kDistanceTestObject = 120.0f;
 
 	// ベクトルの長さを整える
 	mouseDirction = Nomalize(mouseDirction);

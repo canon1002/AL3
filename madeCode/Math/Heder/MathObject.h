@@ -1,5 +1,4 @@
 #pragma once
-//#include "Vector3Funk.h"
 #include<Vector3.h>
 
 /// <summary>
@@ -8,6 +7,14 @@
 struct Sphere {
 	Vector3 center;
 	float radius;
+};
+
+/// <summary>
+/// 平面
+/// </summary>
+struct Plane {
+	Vector3 normal;// 法線
+	float distance;// 距離
 };
 
 /// <summary>
@@ -31,6 +38,7 @@ struct Ray
 /// <summary>
 /// 線分
 /// </summary>
+/// 
 struct Segment
 {
 	Vector3 origin;
