@@ -17,7 +17,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, Vector3& ve
 	// 受け取ったデータをメンバ変数に格納
 	m_model = model;
 	// テクスチャ読み込み
-	m_textureHandle = TextureManager::Load("white1x1.png");
+	m_textureHandle = TextureManager::Load("./Resources/bullet/bullet.png");
 
 	// ワールドトランスフォームの初期化
 	m_worldTransform.Initialize();

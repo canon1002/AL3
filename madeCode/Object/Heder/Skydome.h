@@ -35,7 +35,5 @@ private:
 	WorldTransform m_worldTransform;
 	// モデル
 	Model* m_model = nullptr;
-	// テクスチャ
-	uint32_t m_textureHandle = 0u;
-
+	
 };

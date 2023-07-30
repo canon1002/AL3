@@ -10,11 +10,13 @@ EnemyBullet::~EnemyBullet() {}
 /// ・・・・・ｻ
 void EnemyBullet::Initialize(Model* model, const Vector3& position, Vector3& velocity) {
 
-	// NULL・|・C・・・^・`・F・b・N
-	assert(model);
-
 	// ・・・ｯ・・・ﾁ・ｽ・f・[・^・・・・・・・o・ﾏ・・・ﾉ・i・[
-	m_model = model;
+	m_model = Model::CreateFromOBJ("bullet", true);
+
+	// NULL・|・C・・・^・`・F・b・N
+	assert(m_model);
+
+	
 	// ・e・N・X・`・・・ﾇ・ﾝ・・・ﾝ
 	m_textureHandle = TextureManager::Load("Bullet.png");
 

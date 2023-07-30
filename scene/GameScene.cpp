@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	m_player = new Player();
 	// 自キャラの初期化
-	m_player->Initialize(m_model, m_textureHandle, {0, 0, 40});
+	m_player->Initialize(m_textureHandle, {0, 0, 40});
 	// 自キャラとレールカメラの親子関係を結ぶ
 	m_player->SetParent(&m_railCamera->GetWorldTransform());
 	// デバッグカメラの生成
@@ -81,6 +81,9 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	static int gTime = 0;
+	gTime++;
 
 	//
 	// ↓キー入力 ここから
@@ -211,6 +214,7 @@ void GameScene::Update() {
 	for (EnemyBullet* enemyBullet : m_enemyBullets) {
 		m_collisionManager->SetCollider(enemyBullet);
 	}
+	
 
 	// 衝突マネージャーの当たり判定処理を呼び出す
 	m_collisionManager->Update();
@@ -394,7 +398,7 @@ void GameScene::UpdateEnemyPopCommands()
 
 			// 敵を発生させる
 			Enemy* newEnemy = new Enemy();
-			newEnemy->Initialize(m_model, Vector3(x, y, z), Vector3(0, 0, -0.0f));
+			newEnemy->Initialize(m_model, Vector3(x, y, z), Vector3(0, 0, -0.3f));
 			// 敵キャラにゲームシーンとプレイヤーを渡す
 			newEnemy->SetGameScene(this);
 			newEnemy->SetPlayer(m_player);

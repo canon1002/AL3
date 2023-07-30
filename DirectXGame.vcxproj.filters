@@ -117,6 +117,18 @@
     <ClCompile Include="madeCode\Novice\Novice.cpp">
       <Filter>ソース ファイル\madeCode</Filter>
     </ClCompile>
+    <ClCompile Include="madeCode\Object\Source\Lineofsight.cpp">
+      <Filter>ソース ファイル\madeCode</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>ソース ファイル\madeCode</Filter>
+    </ClCompile>
+    <ClCompile Include="OverScene.cpp">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClCompile>
+    <ClCompile Include="ClrarScene.cpp">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -249,6 +261,18 @@
       <Filter>ヘッダー ファイル\madeCode</Filter>
     </ClInclude>
     <ClInclude Include="madeCode\Novice\Novice.h">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClInclude>
+    <ClInclude Include="madeCode\Object\Heder\Lineofsight.h">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClInclude>
+    <ClInclude Include="OverScene.h">
+      <Filter>ヘッダー ファイル\madeCode</Filter>
+    </ClInclude>
+    <ClInclude Include="ClrarScene.h">
       <Filter>ヘッダー ファイル\madeCode</Filter>
     </ClInclude>
   </ItemGroup>

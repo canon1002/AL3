@@ -2,6 +2,9 @@
 #include "AxisIndicator.h"
 #include "DirectXCommon.h"
 #include "GameScene.h"
+#include "TitleScene.h"
+#include "ClrarScene.h"
+#include "OverScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
@@ -16,7 +19,10 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
+	TitleScene* titleScene = nullptr;
 	GameScene* gameScene = nullptr;
+	ClearScene* clearScene = nullptr;
+	OverScene* overScene = nullptr;
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
@@ -34,6 +40,8 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 	// 入力の初期化
 	input = Input::GetInstance();
 	input->Initialize();
+
+	XINPUT_STATE joyState;
 
 	// オーディオの初期化
 	audio = Audio::GetInstance();
@@ -57,9 +65,21 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 	primitiveDrawer->Initialize();
 #pragma endregion
 
+	// タイトルシーンの初期化
+	titleScene = new TitleScene;
+	titleScene->Initialize();
+
 	// ゲームシーンの初期化
 	gameScene = new GameScene();
 	gameScene->Initialize();
+
+	clearScene = new ClearScene;
+	clearScene->Initialize();
+	overScene = new OverScene;
+	overScene->Initialize();
+
+	// シーン切り替え変数
+	int sceneNumber = 0;
 
 	// メインループ
 	while (true) {
@@ -72,8 +92,42 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 		imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
-		// ゲームシーンの毎フレーム処理
-		gameScene->Update();
+
+		switch (sceneNumber) {
+		case 0:
+
+			// タイトルシーンの処理
+			titleScene->Update();
+			
+			if (titleScene->GetSceneChange()) {
+				sceneNumber = 1;
+			}
+
+			break;
+		case 1:
+
+			// ゲームシーンの毎フレーム処理
+			gameScene->Update();
+
+			break;
+		case 2:
+
+			// ゲームシーンの毎フレーム処理
+			gameScene->Update();
+
+			break;
+		case 3:
+
+			// ゲームシーンの毎フレーム処理
+			gameScene->Update();
+
+			break;
+		default:
+			break;
+		}
+
+		
+
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -81,8 +135,25 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 
 		// 描画開始
 		dxCommon->PreDraw();
-		// ゲームシーンの描画
-		gameScene->Draw();
+		
+		switch (sceneNumber) {
+		case 0:
+
+			// タイトルシーン
+			titleScene->Draw();
+
+			break;
+		case 1:
+
+			// ゲームシーン
+			gameScene->Draw();
+
+			break;
+
+		default:
+			break;
+		}
+
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
@@ -91,6 +162,11 @@ int WINAPI WinMain(_In_ HINSTANCE,_In_opt_ HINSTANCE,_In_ LPSTR,_In_ int) {
 		imguiManager->Draw();
 		// 描画終了
 		dxCommon->PostDraw();
+
+		// ESCキー入力でウィンドウを閉じる
+		if (input->PushKey(DIK_ESCAPE)) {
+			break;
+		}
 	}
 
 	// 各種解放

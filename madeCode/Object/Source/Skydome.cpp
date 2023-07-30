@@ -5,7 +5,7 @@ Skydome::Skydome() { }
 
 void Skydome::Initialize() {
 
-	// 受け取ったデータをメンバ変数に格納
+	// データをメンバ変数に格納
 	m_model = Model::CreateFromOBJ("skydome", true);
 	
 	// ワールド変換の初期化

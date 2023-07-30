@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "madeCode/Setting/Heder/Collider.h"
+#include "madeCode/Object/Heder/Lineofsight.h"
 #include "Input.h"
 #include "Model.h"
 #include "PlayerBullet.h"
@@ -14,7 +15,7 @@ public: // メソッド
 	Player();
 	~Player();
 
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 worldPos);
+	void Initialize(uint32_t textureHandle, Vector3 worldPos);
 	void Update(const ViewProjection& viewProjection);
 	void Draw(const ViewProjection& viewProjection) const;
 
@@ -66,6 +67,10 @@ public: // メソッド
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
 
+	/// <summary>
+	/// ゲームシーンの取得
+	/// </summary>
+	/// <param name="gs"></param>
 	void SetGameScene(GameScene* gs) { m_gameScene = gs; }
 
 #pragma region レティクル
@@ -77,16 +82,20 @@ public: // メソッド
 
 #pragma endregion
 
-private: // フィールド
+public: // フィールド
+
 	// ワールド変換データ
 	WorldTransform m_worldTransform;
 	// モデル
 	Model* m_model = nullptr;
+	Model* m_bulletModel = nullptr;
 	// テクスチャハンドル
 	uint32_t m_textureHandle = 0u;
 	// デスフラグ
 	bool m_isDead = false;
-
+	// 射撃クールタイム
+	int32_t m_shotCoolTime;
+	const int32_t kShotCoolTimeMax = 15;
 	// 衝突属性(自分)
 	uint32_t m_collisionAttribute = kCollisionAttributePlayer;
 	// 衝突マスク(相手)
@@ -102,11 +111,22 @@ private: // フィールド
 
 #pragma region レティクル
 
+
+
 	// 3Dレティクル用ワールド変換データ
 	WorldTransform m_worldTransform3DReticle;
 
 	// 2Dレティクル用スプライト
 	Sprite* m_sprite2DReticle = nullptr;
+
+#pragma endregion
+
+#pragma region 弾道予測線(直線)
+
+	Lineofsight* m_line = new Lineofsight;
+
+	// 受け取ったデータをメンバ変数に格納
+	Model* lineModel = nullptr;
 
 #pragma endregion
 };

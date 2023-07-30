@@ -11,11 +11,14 @@ Enemy::~Enemy() {}
 /// 初期化
 void Enemy::Initialize(Model* model, const Vector3& position,const Vector3& velocity) {
 
-	// NULLであればエラー
+
+
+	m_model = Model::CreateFromOBJ("bullet", true);
+
+		// NULLであればエラー
 	assert(model);
 
-	m_model = model;
-	m_textureHandle = TextureManager::Load("enemySoul.jpg");
+	m_textureHandle = TextureManager::Load("white1x1.png");
 	m_worldTransform.Initialize();
 	m_worldTransform.translation_ = position;
 	m_vel = velocity;
@@ -41,11 +44,11 @@ void Enemy::Update() {
 		if (m_attackCoolTime > 0) {
 			m_attackCoolTime--;
 		} else if (m_attackCoolTime == 0) {
-			m_attackCoolTime = 60;
+			m_attackCoolTime = 180;
 			Attack();
 		}
 
-		// ・・｢・ｮ・・・ｮ・ｽ・・ｽｮ・・ｧ・・・・・ｧ・・ｼ・・ｺ・ｧｻ・｡・
+		// 
 		if (m_worldTransform.translation_.z < 20.0f) {
 
 			// ・・・ｺｦ・・・・・・・ｨｭ・ｮ・
@@ -120,10 +123,10 @@ void Enemy::Attack() {
 	SubPos.y = (SubPos.y / length);
 	SubPos.z = (SubPos.z / length);
 
-	Vector3 velocity;
-	velocity.x = SubPos.x * kBulletSpeed;
-	velocity.y = SubPos.y * kBulletSpeed;
-	velocity.z = SubPos.z * kBulletSpeed;
+	Vector3 velocity{0,0,-1};
+	//velocity.x = SubPos.x * kBulletSpeed;
+	//velocity.y = SubPos.y * kBulletSpeed;
+	//velocity.z = SubPos.z * kBulletSpeed;
 
 	// 敵の弾を生成
 	EnemyBullet* newBullet = new EnemyBullet();
